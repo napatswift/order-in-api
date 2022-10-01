@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tables', function (Blueprint $table) {
-            $table->char('table_number', 2)->primary();
-            $table->char('available', 1);
+        Schema::create('promotion', function (Blueprint $table) {
+            $table->double('promotion_price');
+            $table->datetime('start_date'); // 1st day to have promotion
+            $table->datetime('end_date'); // last day 
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tables');
+        Schema::dropIfExists('promotion');
     }
 };
