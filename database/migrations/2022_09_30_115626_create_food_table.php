@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('food', function (Blueprint $table) {
             $table->id();
-            // $table->increments('food_id');
             $table->char('food_name', 30);
             $table->char('food_type', 10);
             $table->double('food_price');
             $table->char('food_detail', 128);
+            $table->char('food_allergy', 20);
             $table->time('cooking_time');
             $table->timestamps();
         });
