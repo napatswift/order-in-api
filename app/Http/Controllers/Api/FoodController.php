@@ -29,7 +29,7 @@ class FoodController extends Controller
                 'success' => true,
                 'message' => 'Food saved successfully',
                 'food_id' => $food->id
-            ], 200);
+            ], 201);
         }
         return response()->json([
             'success' => false,
@@ -49,7 +49,7 @@ class FoodController extends Controller
         }
         return response()->json([
             'success' => false,
-            'message' => 'Foodupdated failed'
+            'message' => 'Food updated failed'
         ], 500);
     }
 
