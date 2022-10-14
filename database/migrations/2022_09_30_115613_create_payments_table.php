@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->char('payment_method', 20);
-            $table->timestamp('date_payment')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('date_payment')->useCurrent();
             $table->timestamps();
         });
     }
