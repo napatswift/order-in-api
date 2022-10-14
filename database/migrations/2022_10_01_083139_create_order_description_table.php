@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('order_description', function (Blueprint $table) {
+        Schema::create('order_descriptions', function (Blueprint $table) {
             // $table->id();
             // $table->foreignIdFor(\App\Models\Food::class);
             // $table->foreign('order_id')->references('food_id')->on('food');
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_description');
+        Schema::dropIfExists('order_descriptions');
     }
 };
