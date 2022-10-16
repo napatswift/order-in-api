@@ -22,3 +22,9 @@ Route::apiResource('employees', App\Http\Controllers\Api\EmployeeController::cla
 Route::apiResource('foodAllergies', App\Http\Controllers\Api\FoodAllergyController::class);
 Route::apiResource('foods', App\Http\Controllers\Api\FoodController::class);
 Route::apiResource('payments', App\Http\Controllers\Api\PaymentController::class);
+Route::apiResource('promotions', App\Http\Controllers\Api\PromotionController::class);
+Route::apiResource('ratings', App\Http\Controllers\Api\RatingController::class);
+Route::apiResource('tables', App\Http\Controllers\Api\TableController::class);
+Route::apiResource('orders', App\Http\Controllers\Api\OrderController::class);
+Route::apiResource('orderDescriptions', App\Http\Controllers\Api\OrderDescriptionController::class);
+Route::apiResource('reviews', App\Http\Controllers\Api\ReviewController::class);

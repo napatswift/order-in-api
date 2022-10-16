@@ -13,7 +13,7 @@ class OrderDescriptionController extends Controller
 {
     public function index()
     {
-        return OrderDescriptionResource::collection(OrderDescription::all());
+        return OrderDescriptionResource::all();
     }
 
     public function show(OrderDescription $orderDescription)

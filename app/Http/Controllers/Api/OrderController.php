@@ -13,9 +13,7 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::all();
-
-        return OrderResource::collection($orders);
+        return Order::all();
     }
 
     public function show(Order $order)

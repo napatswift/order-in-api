@@ -16,10 +16,10 @@ class FoodAllergyController extends Controller
         return FoodAllergy::all();
     }
 
-    // public function show(FoodAllergy $foodAllergy)
-    // {
-    //     return new FoodAllergyResource($foodAllergy);
-    // }
+    public function show(FoodAllergy $foodAllergy)
+    {
+        return new FoodAllergyResource($foodAllergy);
+    }
 
     public function store(StoreFoodAllergyRequest $request)
     {
@@ -37,34 +37,34 @@ class FoodAllergyController extends Controller
         ], 500);
     }
 
-    // public function update(UpdateFoodAllergyRequest $request, FoodAllergy $foodAllergy) 
-    // {
-    //     $foodAllergy->update($request->all());
-    //     if ($foodAllergy->save()) {
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'FoodAllergy updated successfully',
-    //             'foodAllergy' => $foodAllergy->food_allergies
-    //         ], 200);
-    //     }
-    //     return response()->json([
-    //         'success' => false,
-    //         'message' => 'FoodAllergy updated failed'
-    //     ], 500);
-    // }
+    public function update(UpdateFoodAllergyRequest $request, FoodAllergy $foodAllergy) 
+    {
+        $foodAllergy->update($request->all());
+        if ($foodAllergy->save()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'FoodAllergy updated successfully',
+                'foodAllergy' => $foodAllergy->food_allergies
+            ], 200);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'FoodAllergy updated failed'
+        ], 500);
+    }
 
-    // public function destroy(FoodAllergy $foodAllergy)
-    // {
-    //     $name = $foodAllergy->food_allergy;
-    //     if ($foodAllergy->delete()) {
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => "FoodAllergy {$name} deleted successfully"
-    //         ], 200);
-    //     }
-    //     return response()->json([
-    //         'success' => false,
-    //         'message' => "FoodAllergy {$name} deleted failed"
-    //     ], 500);
-    // }
+    public function destroy(FoodAllergy $foodAllergy)
+    {
+        $name = $foodAllergy->food_allergy;
+        if ($foodAllergy->delete()) {
+            return response()->json([
+                'success' => true,
+                'message' => "FoodAllergy {$name} deleted successfully"
+            ], 200);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => "FoodAllergy {$name} deleted failed"
+        ], 500);
+    }
 }

@@ -13,8 +13,7 @@ class RatingController extends Controller
 {
     public function index()
     {
-        $ratings = Rating::all();
-        return RatingResource::collection($ratings);
+        return Rating::all();
     } 
 
     public function show(Rating $rating)

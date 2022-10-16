@@ -16,10 +16,10 @@ class PaymentController extends Controller
         return Payment::all();
     }
 
-    // public function show(Payment $payment)
-    // {
-    //     return new PaymentResource($payment);
-    // }
+    public function show(Payment $payment)
+    {
+        return new PaymentResource($payment);
+    }
 
     public function store(StorePaymentRequest $request)
     {
@@ -37,32 +37,32 @@ class PaymentController extends Controller
         ], 500);
     }
 
-    // public function update(UpdatePaymentRequest $request, Payment $payment)
-    // {
-    //     $payment->update($request->all());
-    //     if ($payment->save()) {
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'Payment updated successfully',
-    //             'payment' => $payment
-    //         ], 200);
-    //     }
-    //     return response()->json([
-    //         'success' => false,
-    //         'message' => 'Payment updated failed'
-    //     ], 500);
-    // }
+    public function update(UpdatePaymentRequest $request, Payment $payment)
+    {
+        $payment->update($request->all());
+        if ($payment->save()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Payment updated successfully',
+                'payment' => $payment
+            ], 200);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Payment updated failed'
+        ], 500);
+    }
 
-    // public function destroy(Payment $payment)
-    // {
-    //     if ($food->delete()) {
-    //         return response()->json([
-    //             'success' => "Payment deleted successfully"
-    //         ], 200);
-    //     }
-    //     return response()->json([
-    //         'success' => false,
-    //         'message' => "Payment deleted failed"
-    //     ], 500);
-    // }
+    public function destroy(Payment $payment)
+    {
+        if ($food->delete()) {
+            return response()->json([
+                'success' => "Payment deleted successfully"
+            ], 200);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => "Payment deleted failed"
+        ], 500);
+    }
 }
