@@ -68,6 +68,15 @@ services:
             - sail
         ports:
             - 8001:80
+    localtunnel:
+        image: efrecon/localtunnel
+        restart: on-failure
+        command:
+            --local-host laravel.test --port 80 --subdomain ${LOCALTUNNEL_SUBDOMAIN}
+        depends_on:
+            - laravel.test
+        networks:
+            - sail
 networks:
     sail:
         driver: bridge
