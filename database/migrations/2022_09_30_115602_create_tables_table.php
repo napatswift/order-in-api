@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tables', function (Blueprint $table) {
-            $table->char('table_number', 2)->primary();
+            $table->id();
             $table->char('available', 1);
             $table->timestamps();
         });
