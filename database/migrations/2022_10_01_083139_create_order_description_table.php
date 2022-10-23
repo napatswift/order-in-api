@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('order_descriptions', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('food_id')->constrained();
             $table->char('order_quantity', 2);
             $table->char('order_status', 20);
