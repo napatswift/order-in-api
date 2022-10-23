@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('payments', function (Blueprint $table) {
+            $table->id();
             $table->char('payment_method', 20);
             $table->datetime('date_payment');
             $table->timestamps();

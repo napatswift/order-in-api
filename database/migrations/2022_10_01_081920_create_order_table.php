@@ -14,10 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('order', function (Blueprint $table) {
-            // $table->id();
-            // $table->foreignIdFor(\App\Models\Table::class);
-            
-            $table->char('order_number', 2);
+            $table->char('order_number', 2)->primary();
             $table->foreign('order_number')->references('table_number')->on('tables');
             $table->string('order_description');
             $table->timestamps();

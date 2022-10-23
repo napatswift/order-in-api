@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('promotion', function (Blueprint $table) {
+            $table->id();
             $table->double('promotion_price');
             $table->datetime('start_date'); // 1st day to have promotion
             $table->datetime('end_date'); // last day 

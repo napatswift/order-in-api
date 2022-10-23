@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('rating', function (Blueprint $table) {
+            $table->id();
             $table->integer('count');
             $table->char('name', 30);
             $table->timestamps();

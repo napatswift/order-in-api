@@ -14,10 +14,6 @@ return new class extends Migration
     public function up()
     {
         Schema::create('order_descriptions', function (Blueprint $table) {
-            // $table->id();
-            // $table->foreignIdFor(\App\Models\Food::class);
-            // $table->foreign('order_id')->references('food_id')->on('food');
-            // $table->increments('order_id');
             $table->foreignId('food_id')->constrained();
             $table->integer('order_quantity', 2);
             $table->char('order_status', 20);
