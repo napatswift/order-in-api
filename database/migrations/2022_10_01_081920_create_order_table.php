@@ -19,10 +19,6 @@ return new class extends Migration
             $table->string('order_description');
             $table->timestamps();
         });
-
-        // Schema::table('order', function($table) {
-        //     $table->foreign('order_number')->references('table_number')->on('tables');
-        // });
     }
 
     /**

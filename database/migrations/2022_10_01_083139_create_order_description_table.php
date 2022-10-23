@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('order_descriptions', function (Blueprint $table) {
+        Schema::create('orderDescriptions', function (Blueprint $table) {
             $table->foreignId('food_id')->constrained();
             $table->integer('order_quantity', 2);
             $table->char('order_status', 20);
@@ -21,10 +21,6 @@ return new class extends Migration
             $table->double('order_price');
             $table->timestamps();
         });
-
-        // Schema::table('order_description', function($table) {
-        //     $table->foreign('order_id')->references('food_id')->on('food');
-        // });
     }
 
     /**
