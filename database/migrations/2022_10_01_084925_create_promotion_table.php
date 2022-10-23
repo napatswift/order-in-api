@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('promotion', function (Blueprint $table) {
+        Schema::create('promotions', function (Blueprint $table) {
             $table->id();
             $table->double('promotion_price');
             $table->datetime('start_date'); // 1st day to have promotion
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('promotion');
+        Schema::dropIfExists('promotions');
     }
 };

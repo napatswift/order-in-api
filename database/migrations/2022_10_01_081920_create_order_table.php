@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('order', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->char('order_number', 2)->primary();
             $table->foreign('order_number')->references('table_number')->on('tables');
             $table->string('order_description');

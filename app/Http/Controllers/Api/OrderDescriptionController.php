@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Order_description;
+use App\Models\OrderDescription;
 use App\Http\Resources\OrderDescriptionResource;
 use App\Http\Requests\StoreOrderDescriptionRequest;
 use App\Http\Requests\UpdateOrderDescriptionRequest;
@@ -13,7 +13,7 @@ class OrderDescriptionController extends Controller
 {
     public function index()
     {
-        return OrderDescriptionResource::all();
+        return OrderDescription::all();
     }
 
     public function show(OrderDescription $orderDescription)
