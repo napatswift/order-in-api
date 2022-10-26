@@ -23,7 +23,7 @@ class FoodController extends Controller
 
     public function store(StoreFoodRequest $request)
     {
-        return new FoodResource(Food::create($request->all()));
+        $food = new FoodResource(Food::create($request->all()));
         if ($food->save()) {
             return response()->json([
                 'success' => true,
