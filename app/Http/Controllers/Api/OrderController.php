@@ -23,7 +23,7 @@ class OrderController extends Controller
 
     public function store(StoreOrderRequest $request)
     {
-        return new OrderResource(Order::create($request->all()));
+        $order = new OrderResource(Order::create($request->all()));
         if ($order->save()) {
             return response()->json([
                 'success' => true,

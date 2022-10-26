@@ -23,7 +23,7 @@ class PaymentController extends Controller
 
     public function store(StorePaymentRequest $request)
     {
-        return new PaymentResource(Payment::create($request->all()));
+        $payment = new PaymentResource(Payment::create($request->all()));
         if ($payment->save()) {
             return response()->json([
                 'success' => true,
@@ -55,7 +55,7 @@ class PaymentController extends Controller
 
     public function destroy(Payment $payment)
     {
-        if ($food->delete()) {
+        if ($payment->delete()) {
             return response()->json([
                 'success' => "Payment deleted successfully"
             ], 200);

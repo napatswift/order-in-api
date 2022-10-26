@@ -23,7 +23,7 @@ class OrderDescriptionController extends Controller
 
     public function store(StoreOrderDescriptionRequest $request)
     {
-        return new OrderDescriptionResource(OrderDescription::create($request->all()));
+        $orderDescription = new OrderDescriptionResource(OrderDescription::create($request->all()));
         if ($orderDescription->save()) {
             return response()->json([
                 'success' => true,

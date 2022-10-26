@@ -23,7 +23,7 @@ class FoodAllergyController extends Controller
 
     public function store(StoreFoodAllergyRequest $request)
     {
-        return new FoodAllergyResource(FoodAllergy::create($request->all()));
+        $foodAllergy = new FoodAllergyResource(FoodAllergy::create($request->all()));
         if ($foodAllergy->save()) {
             return response()->json([
                 'success' => true,
