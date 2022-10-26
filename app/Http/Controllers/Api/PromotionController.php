@@ -23,7 +23,7 @@ class PromotionController extends Controller
 
     public function store(StorePromotionRequest $request)
     {
-        return new PromotionResource(Promotion::create($request->all()));
+        $promotion = new PromotionResource(Promotion::create($request->all()));
         if ($promotion->save()) {
             return response()->json([
                 'success' => true,

@@ -23,7 +23,7 @@ class RatingController extends Controller
 
     public function store(StoreRatingRequest $request)
     {
-        return new RatingResource(Rating::create($request->all()));
+        $rating = new RatingResource(Rating::create($request->all()));
         if ($rating->save()) {
             return response()->json([
                 'success' => true,

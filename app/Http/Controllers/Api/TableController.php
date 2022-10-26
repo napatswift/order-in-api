@@ -23,7 +23,7 @@ class TableController extends Controller
 
     public function store(StoreTableRequest $request)
     {
-        return new TableResource(Table::create($request->all()));
+        $table = new TableResource(Table::create($request->all()));
         if ($table->save()) {
             return response()->json([
                 'success' => true,

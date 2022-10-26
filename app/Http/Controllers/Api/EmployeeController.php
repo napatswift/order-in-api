@@ -24,7 +24,7 @@ class EmployeeController extends Controller
 
     public function store(StoreEmployeeRequest $request)
     {
-        return new EmployeeResource(Employee::create($request->all()));
+        $employee = new EmployeeResource(Employee::create($request->all()));
         if ($employee->save()) {
             return response()->json([
                 'success' => true,
