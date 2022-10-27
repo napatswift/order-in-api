@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Restaurant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +20,9 @@ return new class extends Migration
             $table->char('food_type', 16);
             $table->double('food_price');
             $table->char('food_detail', 128);
-            $table->int('cooking_time'); // minute
+            $table->integer('cooking_time'); // minute
+
+            $table->foreignIdFor(Restaurant::class);
             $table->timestamps();
         });
     }

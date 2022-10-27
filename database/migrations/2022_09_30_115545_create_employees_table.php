@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Restaurant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,6 +18,7 @@ return new class extends Migration
             $table->id();
             $table->char('position', 20);
             $table->char('name', 40);
+            $table->foreignIdFor(Restaurant::class);
             $table->timestamps();
         });
     }
