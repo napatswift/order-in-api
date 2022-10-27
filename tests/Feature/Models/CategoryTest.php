@@ -64,6 +64,9 @@ class CategoryTest extends TestCase
 
         $food->categories()->attach($thaiFoodCategory->id);
 
-        $this->ass
+        $this->assertEquals(
+            $thaiFoodCategory->name,
+            $food->categories()->first()->name,
+        );
     }
 }
