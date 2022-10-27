@@ -11,25 +11,25 @@ class Food extends Model
 
     protected $fillable = [
         'food_name',
-        'food_type',
         'food_price',
         'food_detail',
         'food_allergy',
         'cooking_time'
     ];
 
-    public function foodAllergies()
-    {
+    public function foodAllergies(){
         return $this->belongsToMany(FoodAllergy::class);
     }
 
-    public function restaurant()
-    {
+    public function restaurant(){
         return $this->belongsTo(Restaurant::class);
     }
 
-    public function promotion()
-    {
+    public function promotion(){
         return $this->belongsToMany(Promotion::class);
+    }
+
+    public function categories() {
+        return $this->belongsToMany(Category::class);
     }
 }

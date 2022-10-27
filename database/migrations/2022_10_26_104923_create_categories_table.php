@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Restaurant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('food', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->char('food_name', 32);
-            $table->double('food_price');
-            $table->char('food_detail', 128);
-            $table->integer('cooking_time'); // minute
-            $table->foreignIdFor(Restaurant::class);
+            $table->text(16);
             $table->timestamps();
         });
     }
@@ -32,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('food');
+        Schema::dropIfExists('categories');
     }
 };

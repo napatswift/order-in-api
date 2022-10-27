@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('food_allergies', function (Blueprint $table) {
             $table->id();
+            $table->string('allergen');
             $table->timestamps();
         });
     }
