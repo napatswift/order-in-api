@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('order_descriptions', function (Blueprint $table) {
+        Schema::create('restaurants', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_quantity');
-            $table->integer('order_status');
-            $table->text('order_request');
-            $table->double('order_price');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_descriptions');
+        Schema::dropIfExists('restaurants');
     }
 };

@@ -12,4 +12,9 @@ class FoodAllergy extends Model
     protected $fillable = [
         'food_allergies',
     ];
+
+    public function food()
+    {
+        return $this->belongsToMany(Food::class);
+    }
 }

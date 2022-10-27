@@ -17,4 +17,9 @@ class Food extends Model
         'food_allergy',
         'cooking_time'
     ];
+
+    public function foodAllergies()
+    {
+        return $this->belongsToMany(FoodAllergy::class);
+    }
 }

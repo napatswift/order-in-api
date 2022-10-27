@@ -16,4 +16,14 @@ class OrderDescription extends Model
         'order_request',
         'order_price'
     ];
+
+    /**
+     * mappper status id to status name
+     */
+    public $statusName = [
+        'รอ',
+        'กำลังทำ',
+        'เสร็จ',
+    ];
+
 }

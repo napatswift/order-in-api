@@ -11,6 +11,10 @@ class Order extends Model
 
     protected $fillable = [
         'order_number',
-        'order_description'
     ];
+
+    public function orderDescription()
+    {
+        return $this->hasMany(OrderDescription::class);
+    }
 }

@@ -13,4 +13,9 @@ class Payment extends Model
         'payment_method',
         'date_payment'
     ];
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }

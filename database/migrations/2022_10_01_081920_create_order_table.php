@@ -15,8 +15,6 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tables_id')->constrained();
-            $table->string('order_description');
             $table->timestamps();
         });
     }
