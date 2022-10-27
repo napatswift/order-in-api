@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Food;
+use App\Models\FoodAllergy;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,12 +15,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('restaurants', function (Blueprint $table) {
+        Schema::create('food_food_allergy', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            
-            $table->unsignedBigInteger('owner_id');
-            $table->foreign('owner_id')->references('id')->on('managers');
+            $table->foreignIdFor(Food::class);
+            $table->foreignIdFor(FoodAllergy::class);
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('restaurants');
+        Schema::dropIfExists('food_food_allergy');
     }
 };
