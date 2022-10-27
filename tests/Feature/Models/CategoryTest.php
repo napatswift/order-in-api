@@ -37,17 +37,21 @@ class CategoryTest extends TestCase
     
     public function test_add_category_for_food()
     {
+        // create manager
         $manager = new Manager();
         $manager->name = fake()->name();
         $manager->save();
 
+        // create restaurant
         $restaurant = new Restaurant();
         $restaurant->name = 'Restaurant Test';
         $restaurant->owner_id = $manager->id;
         $restaurant->save();
 
+        // add category
         $thaiFoodCategory = Category::create(['name' => 'อาหารไทย']);
 
+        // if it's added
         $this->assertDatabaseCount('categories', 1);
 
         $food = new Food();
@@ -60,6 +64,7 @@ class CategoryTest extends TestCase
         $food->restaurant_id = $restaurant->id;
         $food->save();
 
+        // if it's added
         $this->assertDatabaseCount('food', 1);
 
         $food->categories()->attach($thaiFoodCategory->id);
