@@ -26,4 +26,12 @@ class OrderDescription extends Model
         'เสร็จ',
     ];
 
+    public function food()
+    {
+        return $this->hasOne(Food::class);
+    }
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }

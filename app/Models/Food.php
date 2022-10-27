@@ -22,4 +22,14 @@ class Food extends Model
     {
         return $this->belongsToMany(FoodAllergy::class);
     }
+
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
+
+    public function promotion()
+    {
+        return $this->belongsToMany(Promotion::class);
+    }
 }

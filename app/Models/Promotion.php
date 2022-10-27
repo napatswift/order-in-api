@@ -19,4 +19,9 @@ class Promotion extends Model
     {
         return $this->belongsToMany(Food::class);
     }
+
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
 }

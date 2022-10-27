@@ -13,4 +13,9 @@ class Table extends Model
         'table_number',
         'available'
     ];
+
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
 }

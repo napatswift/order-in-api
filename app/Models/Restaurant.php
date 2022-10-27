@@ -14,13 +14,28 @@ class Restaurant extends Model
         return $this->hasMany(Employee::class);
     }
 
-    public function promotion()
+    public function food()
     {
-        return $this->hasMany(Promotion::class);
+        return $this->hasMany(Food::class);
+    }
+
+    public function manager()
+    {
+        return $this->belongsTo(Manager::class);
+    }
+
+    public function order()
+    {
+        return $this->hasMany(Order::class);
     }
 
     public function tables()
     {
         return $this->hasMany(Table::class);
+    }
+
+    public function review()
+    {
+        return $this->hasMany(Review::class);
     }
 }
