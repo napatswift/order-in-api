@@ -9,6 +9,10 @@ class Restaurant extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name'
+    ];
+
     public function employees()
     {
         return $this->hasMany(Employee::class);
@@ -21,7 +25,7 @@ class Restaurant extends Model
 
     public function manager()
     {
-        return $this->belongsTo(Manager::class);
+        return $this->belongsTo(Manager::class, 'owner_id');
     }
 
     public function order()

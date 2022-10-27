@@ -8,6 +8,7 @@ use Tests\TestCase;
 
 class RestaurantTest extends TestCase
 {
+    
     /**
      * A basic feature test example.
      *

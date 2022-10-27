@@ -16,10 +16,8 @@ class FoodResource extends JsonResource
     {
         return [
             'food_name' => $this->food_name,
-            'food_type' => $this->food_type,
             'food_price' => $this->food_price,
             'food_detail' => $this->food_detail,
-            'food_allergy' => $this->food_allergy,
             'cooking_time' => $this->cooking_time
         ];
     }
