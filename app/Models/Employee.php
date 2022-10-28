@@ -8,10 +8,16 @@ class Employee extends User
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'position',
-    ];
+    protected $table = 'users';
+
+    public static function boot()
+    {
+        parent::boot();
+ 
+        static::addGlobalScope(function ($query) {
+            $query->where('is_employee', true);
+        });
+    }
 
     public function restaurant()
     {

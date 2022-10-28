@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Food;
 use App\Models\Manager;
 use App\Models\Restaurant;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -18,13 +19,12 @@ class SimpleRestaurantSeeder extends Seeder
      */
     public function run()
     {
-        $manager = new Manager();
-        $manager->name = fake()->name();
-        $manager->save();
+
+        User::factory(50)->create();
 
         $restaurant = new Restaurant();
         $restaurant->name = 'Restaurant Test';
-        $restaurant->owner_id = $manager->id;
+        $restaurant->owner_id = Manager::inRandomOrder()->first()->id;
         $restaurant->save();
         
         Category::factory(10)->create();

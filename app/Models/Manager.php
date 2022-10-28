@@ -3,11 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Manager extends Model
+class Manager extends User
 {
     use HasFactory;
+
+    protected $table = 'users';
+
+    public static function boot()
+    {
+        parent::boot();
+ 
+        static::addGlobalScope(function ($query) {
+            $query->where('is_manager', true);
+        });
+    }
 
     public function restaurant()
     {

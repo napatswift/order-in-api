@@ -27,7 +27,13 @@ class RestaurantTest extends TestCase
     public function test_add_restaurant()
     {
         $manager = new Manager();
-        $manager->name = fake()->name();
+        $manager->name = fake()->name;
+        $manager->username = fake()->userName();
+        $manager->email = fake()->email();
+        $password_test = 'password';
+        $manager->password = bcrypt($password_test);
+        $manager->is_manager = true;
+        $manager->is_employee = false;
         $manager->save();
 
         $restaurant = new Restaurant();
@@ -36,5 +42,7 @@ class RestaurantTest extends TestCase
         $restaurant->save();
 
         $manager->restaurant()->save($restaurant);
+
+        $this->assertEquals($manager->restaurant->name, $restaurant->name);
     }
 }

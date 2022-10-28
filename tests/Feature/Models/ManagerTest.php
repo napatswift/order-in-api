@@ -12,34 +12,34 @@ class ManagerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function test_example()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
     public function test_add_manager_without_restaurant()
     {
         $manager = new Manager();
-        $manager->name = fake()->name();
+        $manager->name = fake()->name;
+        $manager->username = fake()->userName();
+        $manager->email = fake()->email();
+        $password_test = 'password';
+        $manager->password = bcrypt($password_test);
+        $manager->is_manager = true;
+        $manager->is_employee = false;
         $manager->save();
 
-        $this->assertDatabaseCount('managers', 1);
+        $this->assertDatabaseCount('users', 1);
     }
 
     public function test_add_manager_with_a_restaurant()
     {
         $manager = new Manager();
-        $manager->name = fake()->name();
+        $manager->name = fake()->name;
+        $manager->username = fake()->userName();
+        $manager->email = fake()->email();
+        $password_test = 'password';
+        $manager->password = bcrypt($password_test);
+        $manager->is_manager = true;
+        $manager->is_employee = false;
         $manager->save();
 
-        $this->assertDatabaseCount('managers', 1);
+        $this->assertDatabaseCount('users', 1);
 
         $restaurant = new Restaurant();
         $restaurant->name = 'Restaurant Test';

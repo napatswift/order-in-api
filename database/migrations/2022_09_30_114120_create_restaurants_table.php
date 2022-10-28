@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             
             $table->unsignedBigInteger('owner_id');
-            $table->foreign('owner_id')->references('id')->on('managers');
+            $table->foreign('owner_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

@@ -39,7 +39,13 @@ class CategoryTest extends TestCase
     {
         // create manager
         $manager = new Manager();
-        $manager->name = fake()->name();
+        $manager->name = fake()->name;
+        $manager->username = fake()->userName();
+        $manager->email = fake()->email();
+        $password_test = 'password';
+        $manager->password = bcrypt($password_test);
+        $manager->is_manager = true;
+        $manager->is_employee = false;
         $manager->save();
 
         // create restaurant
