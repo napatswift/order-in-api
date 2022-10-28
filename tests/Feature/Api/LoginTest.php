@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Employee;
 use App\Models\Manager;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -55,18 +56,18 @@ class LoginTest extends TestCase
 
     public function test_employee_login()
     {
-        $user = new User();
-        $user->name = fake()->name;
-        $user->username = fake()->userName();
-        $user->email = fake()->email();
+        $employee = new Employee();
+        $employee->name = fake()->name;
+        $employee->username = fake()->userName();
+        $employee->email = fake()->email();
         $password_test = 'password';
-        $user->password = bcrypt($password_test);
-        $user->is_manager = false;
-        $user->is_employee = false;
-        $user->save();
+        $employee->password = bcrypt($password_test);
+        $employee->is_manager = false;
+        $employee->is_employee = false;
+        $employee->save();
 
         $response = $this->postJson($this->endPoint, [
-            'username' => $user->username,
+            'username' => $employee->username,
             'password' => $password_test,
         ]);
 
