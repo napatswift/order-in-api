@@ -25,7 +25,7 @@ class Restaurant extends Model
 
     public function manager()
     {
-        return $this->belongsTo(Manager::class, 'restaurant_id');
+        return $this->belongsTo(Manager::class, 'owner_id', 'id');
     }
 
     public function order()
