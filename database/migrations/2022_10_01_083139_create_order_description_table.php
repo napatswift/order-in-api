@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Food;
+use App\Models\Order;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,11 +17,12 @@ return new class extends Migration
     {
         Schema::create('order_descriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('food_id')->constrained();
-            $table->char('order_quantity', 2);
-            $table->char('order_status', 20);
-            $table->string('order_request');
+            $table->integer('order_quantity');
+            $table->integer('order_status');
+            $table->text('order_request');
             $table->double('order_price');
+            $table->foreignIdFor(Order::class);
+            $table->foreignIdFor(Food::class);
             $table->timestamps();
         });
     }

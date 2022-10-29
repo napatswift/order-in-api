@@ -10,6 +10,11 @@ class FoodAllergy extends Model
     use HasFactory;
 
     protected $fillable = [
-        'food_allergies',
+        'allergen',
     ];
+
+    public function food()
+    {
+        return $this->belongsToMany(Food::class);
+    }
 }

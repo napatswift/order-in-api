@@ -14,4 +14,14 @@ class Promotion extends Model
         'start_date',
         'end_date'
     ];
+
+    public function food()
+    {
+        return $this->belongsToMany(Food::class);
+    }
+
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
 }

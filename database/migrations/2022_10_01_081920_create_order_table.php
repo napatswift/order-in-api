@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Customer;
+use App\Models\Restaurant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,11 +15,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('order', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tables_id')->constrained();
-            $table->string('order_description');
             $table->timestamps();
+            $table->foreignIdFor(Restaurant::class);
+            $table->foreignIdFor(Customer::class);
         });
     }
 

@@ -11,6 +11,20 @@ class Order extends Model
 
     protected $fillable = [
         'order_number',
-        'order_description'
     ];
+
+    public function orderDescription()
+    {
+        return $this->hasMany(OrderDescription::class);
+    }
+
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

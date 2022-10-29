@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Food;
+use App\Models\Promotion;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,10 +15,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('food_promotion', function (Blueprint $table) {
             $table->id();
-            $table->char('position', 20);
-            $table->char('name', 40);
+            $table->foreignIdFor(Food::class);
+            $table->foreignIdFor(Promotion::class);
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('food_promotion');
     }
 };

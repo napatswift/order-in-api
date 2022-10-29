@@ -5,17 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Table extends Model
+class Category extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'table_number',
-        'available'
+        'name',
     ];
 
-    public function restaurant()
+    public function food()
     {
-        return $this->belongsTo(Restaurant::class);
+        return $this->belongsToMany(Food::class);
     }
 }

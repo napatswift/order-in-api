@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Employee extends User
+class Customer extends Model
 {
     use HasFactory;
 
@@ -24,5 +25,10 @@ class Employee extends User
     public function restaurant()
     {
         return $this->belongsTo(Restaurant::class);
+    }
+
+    public function order()
+    {
+        return $this->hasMany(Order::class);
     }
 }

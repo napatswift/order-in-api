@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Employee extends User
+class Manager extends User
 {
     use HasFactory;
 
@@ -16,13 +16,13 @@ class Employee extends User
  
         static::addGlobalScope(function ($query) {
             $query
-                ->where('is_employee', true)
-                ->where('is_manager', false);
+                ->where('is_employee', false)
+                ->where('is_manager', true);
         });
     }
 
     public function restaurant()
     {
-        return $this->belongsTo(Restaurant::class);
+        return $this->hasOne(Restaurant::class, 'owner_id');
     }
 }

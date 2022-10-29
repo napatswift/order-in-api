@@ -13,4 +13,9 @@ class Rating extends Model
         'count',
         'name'
     ];
+
+    public function review()
+    {
+        return $this->belongsTo(Review::class);
+    }
 }

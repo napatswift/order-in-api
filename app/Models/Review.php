@@ -12,4 +12,14 @@ class Review extends Model
     protected $fillable = [
         'feedback',
     ];
+
+    public function rating()
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
 }

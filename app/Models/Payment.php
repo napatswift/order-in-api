@@ -13,4 +13,17 @@ class Payment extends Model
         'payment_method',
         'date_payment'
     ];
+
+    /**
+     * mapper from id to name
+     */
+    public $paymentType = [
+        'เงินสด',
+        'โอนเงิน',
+    ];
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }
