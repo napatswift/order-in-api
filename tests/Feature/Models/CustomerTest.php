@@ -2,16 +2,19 @@
 
 namespace Tests\Feature\Models;
 
-use App\Models\Employee;
+use App\Models\Customer;
 use App\Models\Manager;
 use App\Models\Restaurant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Nette\Utils\Random;
 use Tests\TestCase;
+use Illuminate\Support\Str;
 
-class EmployeeTest extends TestCase
+class CustomerTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic feature test example.
      *
@@ -42,25 +45,28 @@ class EmployeeTest extends TestCase
         $restaurant->save();
     }
 
-    public function test_add_employee()
+    public function test_add_cutomer()
     {
         $this->set_up_restaurant();
 
-        $employee = new Employee();
-        $employee->name = fake()->name;
-        $employee->username = fake()->userName();
-        $employee->email = fake()->email();
+        $customer = new Customer();
+        $customer->name = fake()->name;
+        $customer->username = Str::random(32);
+        $customer->email = Str::random(32);
+
         $password_test = 'password';
-        $employee->password = bcrypt($password_test);
-        $employee->is_manager = false;
-        $employee->is_employee = true;
-        $employee->restaurant_id = Restaurant::first()->id;
-        $employee->save();
+        $customer->password = bcrypt($password_test);
+
+        $customer->is_manager = false;
+        $customer->is_employee = false;
+
+        $customer->restaurant_id = Restaurant::first()->id;
+        $customer->save();
 
         $this->assertDatabaseHas('users', [
-            'name' => $employee->name,
-            'is_employee' => true,
-            'is_manager' => false
+            'name' => $customer->name,
+            'is_employee' => false,
+            'is_manager' => false,
         ]);
     }
 }

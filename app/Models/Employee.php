@@ -15,7 +15,9 @@ class Employee extends User
         parent::boot();
  
         static::addGlobalScope(function ($query) {
-            $query->where('is_employee', true);
+            $query
+                ->where('is_employee', true)
+                ->where('is_manager', false);
         });
     }
 

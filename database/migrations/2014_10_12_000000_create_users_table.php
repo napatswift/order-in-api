@@ -18,13 +18,19 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('username')->unique();
+
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
+
             $table->string('password');
+            $table->rememberToken();
+
+            // roles
             $table->boolean('is_manager');
             $table->boolean('is_employee');
+
+            // for cutomer and employee
             $table->foreignIdFor(Restaurant::class)->nullable();
-            $table->rememberToken();
             $table->timestamps();
         });
     }
