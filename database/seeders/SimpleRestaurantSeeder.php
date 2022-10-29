@@ -59,12 +59,22 @@ class SimpleRestaurantSeeder extends Seeder
             $allergens = FoodAllergy::inRandomOrder()
                                 ->limit($rand_max_al)
                                 ->get();
+
+            $rand_max_pr = rand(0, 2);
+            $promotions = Promotion::inRandomOrder()
+                                ->limit($rand_max_al)
+                                ->get();
+
             $food->categories()->saveMany(
                 $categories
             );
 
             $food->foodAllergies()->saveMany(
                 $allergens
+            );
+
+            $food->promotion()->saveMany(
+                $promotions
             );
         }
 
@@ -93,8 +103,9 @@ class SimpleRestaurantSeeder extends Seeder
             $order->restaurant()->associate($restaurant);
             $order->customer()->associate($customer);
             $order->save();
-
-            for ($j=0; $j < rand(1, 30); $j++) { 
+            
+            $items_per_order = rand(1, 20);
+            for ($j=0; $j < $items_per_order; $j++) { 
                 $order_description = new OrderDescription();
                 $order_description->order_quantity = rand(1, 5);
                 $order_description->order_status = rand(0, 3);
@@ -107,7 +118,6 @@ class SimpleRestaurantSeeder extends Seeder
                 $order_description->order_price = $food->food_price;
                 $order_description->save();
             }
-
         }
     }
 }
