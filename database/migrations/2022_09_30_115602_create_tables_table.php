@@ -16,6 +16,7 @@ return new class extends Migration
     {
         Schema::create('tables', function (Blueprint $table) {
             $table->id();
+            $table->string('table_number');
             $table->boolean('available');
             $table->foreignIdFor(Restaurant::class);
             $table->timestamps();

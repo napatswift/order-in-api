@@ -17,7 +17,7 @@ class Customer extends Model
  
         static::addGlobalScope(function ($query) {
             $query
-                ->where('is_employee', true)
+                ->where('is_employee', false)
                 ->where('is_manager', false);
         });
     }

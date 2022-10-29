@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Customer;
+use App\Models\Review;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,11 +14,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('ratings', function (Blueprint $table) {
             $table->id();
-            $table->integer('payment_method')->unsigned();
-            $table->datetime('date_payment');
-            $table->foreignIdFor(Customer::class);
+            $table->string('name');
+            $table->integer('count');
+            $table->foreignIdFor(Review::class);
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('ratings');
     }
 };

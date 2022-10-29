@@ -28,7 +28,7 @@ class OrderDescription extends Model
 
     public function food()
     {
-        return $this->hasOne(Food::class);
+        return $this->belongsTo(Food::class);
     }
     public function order()
     {
