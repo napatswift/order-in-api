@@ -7,6 +7,8 @@ use App\Models\Customer;
 use App\Models\Food;
 use App\Models\FoodAllergy;
 use App\Models\Manager;
+use App\Models\Order;
+use App\Models\OrderDescription;
 use App\Models\Promotion;
 use App\Models\Rating;
 use App\Models\Restaurant;
@@ -48,8 +50,6 @@ class SimpleRestaurantSeeder extends Seeder
 
         $food_list = Food::get();
 
-        $customer = Customer::inRandomOrder()->first();
-
         foreach ($food_list as $food) {
             $rand_max_cat = rand(2, 4);
             $categories = Category::inRandomOrder()
@@ -75,7 +75,7 @@ class SimpleRestaurantSeeder extends Seeder
             $review->feedback = fake()->realText(100);
             $review->restaurant()->associate($restaurant);
             $review->save();
-            
+
             foreach ($rating_names as $rating_name) {
                 $rating = new Rating();
                 $rating->name = $rating_name;
@@ -83,6 +83,31 @@ class SimpleRestaurantSeeder extends Seeder
                 $rating->review()->associate($review);
                 $rating->save();
             }
+        }
+
+        // seed order
+        for ($i=0; $i < 100; $i++) {
+            $customer = Customer::inRandomOrder()->first();
+
+            $order = new Order();
+            $order->restaurant()->associate($restaurant);
+            $order->customer()->associate($customer);
+            $order->save();
+
+            for ($j=0; $j < rand(1, 30); $j++) { 
+                $order_description = new OrderDescription();
+                $order_description->order_quantity = rand(1, 5);
+                $order_description->order_status = rand(0, 3);
+                if (rand(0, 100) < 50)
+                    $order_description->order_request = fake()
+                        ->realText(rand(50, 100));
+                $food = Food::inRandomOrder()->first();
+                $order_description->food()->associate($food);
+                $order_description->order()->associate($order);
+                $order_description->order_price = $food->food_price;
+                $order_description->save();
+            }
+
         }
     }
 }

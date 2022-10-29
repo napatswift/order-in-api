@@ -19,7 +19,7 @@ return new class extends Migration
             $table->id();
             $table->integer('order_quantity');
             $table->integer('order_status');
-            $table->text('order_request');
+            $table->text('order_request')->nullable();
             $table->double('order_price');
             $table->foreignIdFor(Order::class);
             $table->foreignIdFor(Food::class);
