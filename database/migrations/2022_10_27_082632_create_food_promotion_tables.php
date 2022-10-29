@@ -19,7 +19,6 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Food::class);
             $table->foreignIdFor(Promotion::class);
-            $table->timestamps();
         });
     }
 
