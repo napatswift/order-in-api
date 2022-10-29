@@ -22,8 +22,8 @@ class Payment extends Model
         'โอนเงิน',
     ];
 
-    public function order()
+    public function customer()
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Customer::class);
     }
 }

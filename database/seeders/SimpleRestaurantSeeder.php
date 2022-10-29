@@ -4,19 +4,22 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\Customer;
+use App\Models\Employee;
 use App\Models\Food;
 use App\Models\FoodAllergy;
 use App\Models\Manager;
 use App\Models\Order;
 use App\Models\OrderDescription;
+use App\Models\Payment;
 use App\Models\Promotion;
 use App\Models\Rating;
 use App\Models\Restaurant;
 use App\Models\Review;
 use App\Models\Table;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class SimpleRestaurantSeeder extends Seeder
 {
@@ -40,6 +43,20 @@ class SimpleRestaurantSeeder extends Seeder
         FoodAllergy::factory(10)->create();
         Promotion::factory(5)->create();
 
+        $employees = Employee::get();
+
+        foreach ($employees as $employee) {
+            $employee->restaurant()->associate($restaurant);
+            $employee->save();
+        }
+
+        $customers = Customer::inRandomOrder()->get();
+
+        foreach ($customers as $customer) {
+            $customer->restaurant()->associate($restaurant);
+            $customer->save();
+        }
+
         for ($i = 0; $i < 5; $i++) {
             $table = new Table();
             $table->table_number = ''.($i+1);
@@ -55,6 +72,7 @@ class SimpleRestaurantSeeder extends Seeder
             $categories = Category::inRandomOrder()
                                 ->limit($rand_max_cat)
                                 ->get();
+
             $rand_max_al = rand(0, 3);
             $allergens = FoodAllergy::inRandomOrder()
                                 ->limit($rand_max_al)
@@ -62,20 +80,14 @@ class SimpleRestaurantSeeder extends Seeder
 
             $rand_max_pr = rand(0, 2);
             $promotions = Promotion::inRandomOrder()
-                                ->limit($rand_max_al)
+                                ->limit($rand_max_pr)
                                 ->get();
 
-            $food->categories()->saveMany(
-                $categories
-            );
+            $food->categories()->saveMany($categories);
 
-            $food->foodAllergies()->saveMany(
-                $allergens
-            );
+            $food->foodAllergies()->saveMany($allergens);
 
-            $food->promotion()->saveMany(
-                $promotions
-            );
+            $food->promotion()->saveMany($promotions);
         }
 
         $rating_names = ['food', 'service', 'time'];
@@ -104,11 +116,11 @@ class SimpleRestaurantSeeder extends Seeder
             $order->customer()->associate($customer);
             $order->save();
             
-            $items_per_order = rand(1, 20);
+            $items_per_order = rand(1, 5);
             for ($j=0; $j < $items_per_order; $j++) { 
                 $order_description = new OrderDescription();
                 $order_description->order_quantity = rand(1, 5);
-                $order_description->order_status = rand(0, 3);
+                $order_description->order_status = rand(0, 2);
                 if (rand(0, 100) < 50)
                     $order_description->order_request = fake()
                         ->realText(rand(50, 100));
@@ -118,6 +130,15 @@ class SimpleRestaurantSeeder extends Seeder
                 $order_description->order_price = $food->food_price;
                 $order_description->save();
             }
+        }
+
+        foreach ($customers as $customer) {
+            $payment = new Payment();
+            $payment->payment_method = rand(0, 1);
+            $payment->date_payment = Carbon::parse($customer->created_at)
+                ->addMinutes(rand(40, 80));
+            $payment->customer()->associate($customer);
+            $payment->save();
         }
     }
 }
