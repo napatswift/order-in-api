@@ -13,16 +13,22 @@ class FoodController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Food::class);
+        
         return Food::all();
     }
 
     public function show(Food $food)
     {
+        $this->authorize('view', $food);
+
         return new FoodResource($food);
     }
 
     public function store(StoreFoodRequest $request)
     {
+        $this->authorize('create', Food::class);
+
         $food = new FoodResource(Food::create($request->all()));
         if ($food->save()) {
             return response()->json([
@@ -39,6 +45,8 @@ class FoodController extends Controller
 
     public function update(UpdateFoodRequest $request, Food $food)
     {
+        $this->authorize('update', $food);
+
         $food->update($request->all());
         if ($food->save()) {
             return response()->json([
@@ -55,6 +63,8 @@ class FoodController extends Controller
 
     public function destroy(Food $food)
     {
+        $this->authorize('delete', $food);
+
         $name = $food->food_name;
         if ($food->delete()) {
             return response()->json([
