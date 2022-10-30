@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Food;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class FoodPolicy
 {
@@ -43,7 +44,7 @@ class FoodPolicy
     {
         return $user->is_manager == 1
         ? Response::allow()
-        : Response::denyWithStatus('You are not a manager', 404);
+        : Response::denyWithStatus(401, 'You are not a manager');
     }
 
     /**
@@ -57,7 +58,7 @@ class FoodPolicy
     {
         return $user->is_manager == 1 && $user->restaurant_id == $food->restaurant_id
         ? Response::allow()
-        : Response::denyWithStatus('You are not a manager', 404);
+        : Response::denyWithStatus(401, 'You are not a manager');
     }
 
     /**

@@ -13,8 +13,8 @@ class Food extends Model
         'food_name',
         'food_price',
         'food_detail',
-        'food_allergy',
-        'cooking_time'
+        'cooking_time',
+        'restaurant_id',
     ];
 
     public function foodAllergies(){

@@ -8,9 +8,16 @@ use App\Http\Requests\StoreFoodRequest;
 use App\Http\Requests\UpdateFoodRequest;
 use App\Http\Resources\FoodResource;
 use App\Models\Food;
+use App\Models\Manager;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class FoodController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     public function index()
     {
         $this->authorize('viewAny', Food::class);
@@ -27,9 +34,26 @@ class FoodController extends Controller
 
     public function store(StoreFoodRequest $request)
     {
+
         $this->authorize('create', Food::class);
 
-        $food = new FoodResource(Food::create($request->all()));
+        $user_id = Auth::id();
+        if (is_null($user_id)) {
+            return response('user id is null', 500);
+        }
+
+        $manager = Manager::find($user_id);
+        Log::info($manager);
+        if (is_null($manager->restaurant)) {
+            return response('You dont have restaurant', 400);
+        }
+
+        $food = Food::create(
+            array_merge(
+                $request->all(),
+                ['restaurant_id' => $manager->restaurant->id])
+        );
+
         if ($food->save()) {
             return response()->json([
                 'success' => true,
