@@ -20,11 +20,30 @@ class FoodController extends Controller
         $this->authorizeResource(Food::class, 'food');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', Food::class);
         
-        return Food::all();
+        $param_fields = $request->query('fields', '');
+        $included_fileds = explode(',', $param_fields);
+        
+        $param_relations = $request->query('relations', '');
+        $included_relations = explode(',', $param_relations);
+
+        $relations = collect(['foodAllergies', 'restaurant', 'promotion', 'categories']);
+        $included_relations = $relations->intersect($included_relations)->toArray();
+        $columns = collect(['food_name', 'food_price', 'food_detail', 'cooking_time']);
+        $included_fileds = $columns->intersect($included_fileds)->toArray();
+
+        $food_list = Food::with($included_relations)->paginate();
+
+        // Log::info(Food::
+        //     // select($included_fileds)->
+        //     with($included_relations)->get());
+
+        return FoodResource::collection(
+            $food_list
+        );
     }
 
     public function show(Food $food)
