@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 class StoreFoodRequest extends FormRequest
 {
@@ -24,12 +25,12 @@ class StoreFoodRequest extends FormRequest
     public function rules()
     {
         return [
-            'food_name' => ['required'],
-            'food_type' => ['required'],
-            'food_price' => ['required'],
-            'food_detail' => ['required'],
-            'food_allergy' => ['required'],
-            'cooking_time' => ['required'],
+            'food_name' => ['required', 'string'],
+            'food_price' => ['required', 'int'],
+            'food_detail' => ['required', 'string'],
+            'cooking_time' => ['required', 'int'],
+            'category_ids' => ['required', 'array'],
+            'food_allery_ids' => ['sometimes', 'array']
         ];
     }
 }
