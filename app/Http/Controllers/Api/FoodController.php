@@ -17,7 +17,9 @@ class FoodController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api');
+        $this->authorizeResource(Food::class, 'food');
     }
+
     public function index()
     {
         $this->authorize('viewAny', Food::class);
@@ -43,7 +45,7 @@ class FoodController extends Controller
         }
 
         $manager = Manager::find($user_id);
-        Log::info($manager);
+
         if (is_null($manager->restaurant)) {
             return response('You dont have restaurant', 400);
         }
@@ -53,6 +55,9 @@ class FoodController extends Controller
                 $request->all(),
                 ['restaurant_id' => $manager->restaurant->id])
         );
+        
+        $food->categories()->attach($request->get('category_ids'));
+        $food->foodAllergies()->attach($request->get('food_allergy_ids'));
 
         if ($food->save()) {
             return response()->json([
