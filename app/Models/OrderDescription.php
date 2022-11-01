@@ -34,4 +34,10 @@ class OrderDescription extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    public function scopeStatusString()
+    {
+        return 'hello';
+        return $this->statusName[$this->order_status];
+    }
 }
