@@ -6,9 +6,7 @@ use App\Models\Food;
 use App\Models\Manager;
 use App\Models\Restaurant;
 use App\Models\User;
-use Database\Seeders\SimpleRestaurantSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
@@ -44,13 +42,54 @@ class FoodTest extends TestCase
             'Authorization' => 'Bearer ' . $login_response['access_token'],
             ])->getJson(
                 '/api/foods',
-            );
+        );
 
         $response
             ->assertStatus(200)
             ->assertJson(fn (AssertableJson $json) =>
-                $json->has(10));
+                $json
+                    ->has('data', 10)
+        );
     }
+
+    public function test_get_food_with_categories()
+    {
+        $user = new User();
+        $user->name = fake()->name;
+        $user->username = fake()->userName();
+        $user->email = fake()->email();
+        $password_test = 'password';
+        $user->password = bcrypt($password_test);
+        $user->is_manager = false;
+        $user->is_employee = false;
+        $user->save();
+
+        Food::factory(10)->create();
+
+        $login_response = $this->postJson('/api/auth/login', [
+            'username' => $user->username,
+            'password' => $password_test,
+        ]);
+
+        $login_response->assertStatus(200);
+
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $login_response['access_token'],
+            ])->getJson(
+                '/api/foods?relations=categories',
+        );
+
+        $response
+            ->assertStatus(200)
+            ->assertJson(fn (AssertableJson $json) =>
+                $json
+                    ->has('data', 10)
+                    ->has('data.0.categories', 0)
+        );
+    }
+
+
 
     public function test_manager_with_no_restaurant_add_food()
     {

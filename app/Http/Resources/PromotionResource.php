@@ -15,9 +15,10 @@ class PromotionResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'promotion_price' => $this->promotion_price,
-            'start_date' => $this->start_date,
-            'end_date' => $this->end_date
+            'promotion_code' => $this->promotion_code,
+            'name' => $this->name,
+            'description' => $this->description,
+            'discount_amount' => $this->discount_amount
         ];
     }
 }
