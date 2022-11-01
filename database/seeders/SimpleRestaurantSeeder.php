@@ -68,6 +68,10 @@ class SimpleRestaurantSeeder extends Seeder
         $food_list = Food::get();
 
         foreach ($food_list as $food) {
+            $food
+                ->addMediaFromUrl('http://localhost/storage/food/goong-pao-1.jpeg')
+                ->toMediaCollection();
+
             $rand_max_cat = rand(2, 4);
             $categories = Category::inRandomOrder()
                                 ->limit($rand_max_cat)

@@ -30,7 +30,8 @@ class StoreFoodRequest extends FormRequest
             'food_detail' => ['required', 'string'],
             'cooking_time' => ['required', 'int'],
             'category_ids' => ['required', 'array'],
-            'food_allery_ids' => ['sometimes', 'array']
+            'food_allery_ids' => ['sometimes', 'array'],
+            'image' => ['required', 'image']
         ];
     }
 }

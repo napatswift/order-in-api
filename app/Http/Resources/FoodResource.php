@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class FoodResource extends JsonResource
 {
@@ -14,13 +16,22 @@ class FoodResource extends JsonResource
      */
     public function toArray($request)
     {
+        $mediaItems = $this->getMedia();
+        $mediaUrl = null;
+        if (count($mediaItems)) {
+            $mediaUrl = [
+                'original' => $mediaItems[0]->getUrl(),
+                'thumb' => $mediaItems[0]->getUrl('thumb')
+            ];
+        }
+
         return [
             'id'            => $this->id,
             'food_name'     => $this->food_name,
             'food_price'    => $this->food_price,
             'food_detail'   => $this->food_detail,
             'cooking_time'  => $this->cooking_time,
-            'image'         => $this->image,
+            'images'        => $this->when(!is_null($mediaUrl), $mediaUrl),
             'categories'    => CategoryResource::collection($this->whenLoaded('categories')),
             'promotion'     => PromotionResource::collection($this->whenLoaded('promotion')),
             'foodAllergies' => FoodAllergyResource::collection($this->whenLoaded('foodAllergies')),
