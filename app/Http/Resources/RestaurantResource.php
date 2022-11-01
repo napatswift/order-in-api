@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FoodAllergyResource extends JsonResource
+class RestaurantResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,7 +15,7 @@ class FoodAllergyResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'food_allergies' => $this->allergen,
+            'name' => $this->name,
         ];
     }
 }

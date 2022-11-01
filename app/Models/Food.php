@@ -17,19 +17,23 @@ class Food extends Model
         'restaurant_id',
     ];
 
-    public function foodAllergies(){
+    public function foodAllergies()
+    {
         return $this->belongsToMany(FoodAllergy::class);
     }
 
-    public function restaurant(){
+    public function restaurant()
+    {
         return $this->belongsTo(Restaurant::class);
     }
 
-    public function promotion(){
+    public function promotion()
+    {
         return $this->belongsToMany(Promotion::class);
     }
 
-    public function categories() {
+    public function categories()
+    {
         return $this->belongsToMany(Category::class);
     }
 }
