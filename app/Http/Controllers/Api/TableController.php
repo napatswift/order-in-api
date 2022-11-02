@@ -51,7 +51,7 @@ class TableController extends Controller
     public function update(UpdateTableRequest $request, Table $table)
     {
         $this->authorize('update', $table);
-
+        
         $table->update($request->all());
         if ($table->save()) {
             return response()->json([
