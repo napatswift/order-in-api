@@ -11,18 +11,29 @@ use App\Http\Resources\RatingResource;
 
 class RatingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function index()
     {
+        $this->authorize('viewAny', Rating::class);
+
         return Rating::all();
     } 
 
     public function show(Rating $rating)
     {
+        $this->authorize('view', $rating);
+
         return new RatingResource($rating);
     }
 
     public function store(StoreRatingRequest $request)
     {
+        $this->authorize('create', Rating::class);
+
         $rating = new RatingResource(Rating::create($request->all()));
         if ($rating->save()) {
             return response()->json([
@@ -39,6 +50,8 @@ class RatingController extends Controller
 
     public function update(UpdateRatingRequest $request, Rating $rating)
     {
+        $this->authorize('update', $rating);
+
         $rating->update($request->all());
         if ($rating->save()) {
             return response()->json([
@@ -55,6 +68,8 @@ class RatingController extends Controller
 
     public function destroy(Rating $rating)
     {
+        $this->authorize('delete', $rating);
+        
         if ($rating->delete()) {
             return response()->json([
                 'success' => "Rating deleted successfully"
