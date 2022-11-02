@@ -46,8 +46,19 @@ class Food extends Model implements HasMedia
     {
         $this->addMediaConversion('thumb')
               ->width(200)
-            //   ->height(232)
               ->sharpen(10);
     }
 
+    public function getImage()
+    {
+        $mediaItems = $this->getMedia();
+        $mediaUrl = null;
+        if (count($mediaItems)) {
+            $mediaUrl = [
+                'original' => $mediaItems[0]->getUrl(),
+                'thumb' => $mediaItems[0]->getUrl('thumb')
+            ];
+        }
+        return $mediaUrl;
+    }
 }
