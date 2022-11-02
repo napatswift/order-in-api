@@ -28,6 +28,7 @@ Route::apiResource('tables', App\Http\Controllers\Api\TableController::class);
 Route::apiResource('orders', App\Http\Controllers\Api\OrderController::class);
 Route::apiResource('orderDescriptions', App\Http\Controllers\Api\OrderDescriptionController::class);
 Route::apiResource('reviews', App\Http\Controllers\Api\ReviewController::class);
+Route::apiResource('categories', App\Http\Controllers\Api\CategoryController::class);
 
 // routes/api.php
 use App\Http\Controllers\Api\AuthController;

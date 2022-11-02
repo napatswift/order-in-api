@@ -17,15 +17,6 @@ class OrderDescription extends Model
         'order_price'
     ];
 
-    /**
-     * mappper status id to status name
-     */
-    public $statusName = [
-        'รอ',
-        'กำลังทำ',
-        'เสร็จ',
-    ];
-
     public function food()
     {
         return $this->belongsTo(Food::class);

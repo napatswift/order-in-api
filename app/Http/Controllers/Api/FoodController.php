@@ -9,11 +9,15 @@ use App\Http\Requests\UpdateFoodRequest;
 use App\Http\Resources\FoodResource;
 use App\Models\Food;
 use App\Models\Manager;
+use Faker\Core\Uuid;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 class FoodController extends Controller
 {
+
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -31,14 +35,14 @@ class FoodController extends Controller
         
         $param_relations = $request->query('relations', '');
         $included_relations = explode(',', $param_relations);
-        $relations = collect(['foodAllergies', 'restaurant', 'promotion', 'categories']);
+        $relations = collect(['foodAllergies', 'restaurant', 'promotion', 'categories', 'media']);
         $included_relations = $relations->intersect($included_relations)->toArray();
 
         $food_list = Food::with($included_relations)->get();
 
         // Log::info(Food::
-        //     // select($included_fileds)->
-        //     with($included_relations)->get());
+        //     // select($included_fileds)
+        //     ->with($included_relations)->get());
 
         return FoodResource::collection(
             $food_list
@@ -65,7 +69,10 @@ class FoodController extends Controller
         $manager = Manager::find($user_id);
 
         if (is_null($manager->restaurant)) {
-            return response('You dont have restaurant', 400);
+            return response()->json([
+                'success' => true,
+                'message' => 'User doesn\'t have restaurant, try create it first',
+            ], 400);
         }
 
         $food = Food::create(
@@ -77,7 +84,14 @@ class FoodController extends Controller
         $food->categories()->attach($request->get('category_ids'));
         $food->foodAllergies()->attach($request->get('food_allergy_ids'));
 
+        $im_extension = $request->file('image')->extension();
+        $food
+            ->addMediaFromRequest('image')
+            ->usingFileName(fake()->uuid().'.'.$im_extension)
+            ->toMediaCollection();
+
         if ($food->save()) {
+            $food;
             return response()->json([
                 'success' => true,
                 'message' => 'Food saved successfully',

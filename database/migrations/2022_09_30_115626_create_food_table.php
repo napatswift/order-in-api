@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->char('food_name', 32);
             $table->double('food_price');
-            $table->char('food_detail', 128);
+            $table->char('food_detail');
             $table->integer('cooking_time'); // minute
             $table->foreignIdFor(Restaurant::class);
             $table->timestamps();

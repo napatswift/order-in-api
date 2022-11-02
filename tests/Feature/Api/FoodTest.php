@@ -7,6 +7,7 @@ use App\Models\Manager;
 use App\Models\Restaurant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
@@ -107,6 +108,8 @@ class FoodTest extends TestCase
             'username' => $manager->username,
             'password' => $password_test,
         ]);
+    
+        $image = UploadedFile::fake()->image('image.jpg');
 
         $login_response->assertStatus(200);
 
@@ -121,6 +124,7 @@ class FoodTest extends TestCase
                     'food_detail' => 'this is a food and you can eat it',
                     'cooking_time' => 5,
                     'category_ids' => [3, 1],
+                    'image' => $image,
                     // 'food_allery_ids' => ['sometimes', 'array']
                 ]
             );
@@ -141,21 +145,22 @@ class FoodTest extends TestCase
         $manager->is_manager = true;
         $manager->is_employee = false;
         $manager->save();
-
+        
         $restaurant = new Restaurant();
         $restaurant->name = 'Restaurant Test';
         $restaurant->owner_id = $manager->id;
         $restaurant->save();
-
+        
         $manager->restaurant()->save($restaurant);
-
+        
         $login_response = $this->postJson('/api/auth/login', [
             'username' => $manager->username,
             'password' => $password_test,
         ]);
-
+        
         $login_response->assertStatus(200);
-
+        
+        $image = UploadedFile::fake()->image('image.jpg');
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $login_response['access_token'],
@@ -167,6 +172,7 @@ class FoodTest extends TestCase
                     'food_detail' => 'this is a food and you can eat it',
                     'cooking_time' => 5,
                     'category_ids' => [3, 1],
+                    'image' => $image,
                     // 'food_allery_ids' => ['sometimes', 'array']
                 ]
             );

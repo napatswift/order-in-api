@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\Order\OrderDescriptionResource;
+use App\Http\Resources\Order\OrderDescriptionResource as ODResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -16,8 +16,8 @@ class OrderResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'order_number' => $this->id,
-            'order_description' => OrderDescriptionResource::collection($this->whenLoaded('orderDescription')),
+            'id'                => $this->id,
+            'order_description' => ODResource::collection($this->whenLoaded('orderDescription')),
         ];
     }
 }

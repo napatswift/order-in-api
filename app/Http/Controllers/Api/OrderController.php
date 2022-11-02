@@ -22,49 +22,41 @@ class OrderController extends Controller
         $this->authorizeResource(Food::class, 'food');
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $order_of_user = $request->query('ofuser', false);
+        $user_id = Auth::id();
 
-        if ($order_of_user) {
-            $user_id = Auth::id();
+        if (Auth::user()->is_manager) {
+            $user = Manager::find($user_id);
 
-            if (Auth::user()->is_manager) {
-                $user = Manager::find($user_id);
-
-                if (is_null($user->restaurant)) {
-                    return response()->json(
-                        ['message' => 'you don\'t have a restaurant'], 404
-                    );
-                }
-                return OrderResource::collection(
-                    Order::where('restaurant_id', $user->restaurant->id)
-                    ->with(['orderDescription'])
-                    ->get()
+            if (is_null($user->restaurant)) {
+                return response()->json(
+                    ['message' => 'you don\'t have a restaurant'],
+                    404
                 );
             }
-
-            if (Auth::user()->is_employee) {
-                $user = Employee::find($user_id);
-
-                return OrderResource::collection(
-                    Order::where('restaurant_id', $user->restaurant->id)
-                    ->with(['orderDescription'])
-                    ->get()
-                );
-            }
-
             return OrderResource::collection(
-                Order::where('customer_id', $user_id)
+                Order::where('restaurant_id', $user->restaurant->id)
                     ->with(['orderDescription'])
                     ->get()
             );
         }
 
-        // return OrderResource::collection(
-        //     Order::with(['orderDescription'])
-        //         ->get()
-        // );
+        if (Auth::user()->is_employee) {
+            $user = Employee::find($user_id);
+
+            return OrderResource::collection(
+                Order::where('restaurant_id', $user->restaurant->id)
+                    ->with(['orderDescription'])
+                    ->get()
+            );
+        }
+
+        return OrderResource::collection(
+            Order::where('customer_id', $user_id)
+                ->with(['orderDescription'])
+                ->get()
+        );
     }
 
     public function show(Order $order)
