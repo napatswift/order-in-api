@@ -11,18 +11,29 @@ use App\Http\Requests\UpdateTableRequest;
 
 class TableController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function index()
     {
+        $this->authorize('viewAny', Table::class);
+
         return Table::all();
     }
 
     public function show(Table $table)
     {
+        $this->authorize('view', $table);
+
         return new TableResource($table);
     }
 
     public function store(StoreTableRequest $request)
     {
+        $this->authorize('create', Table::class);
+
         $table = new TableResource(Table::create($request->all()));
         if ($table->save()) {
             return response()->json([
@@ -39,6 +50,8 @@ class TableController extends Controller
 
     public function update(UpdateTableRequest $request, Table $table)
     {
+        $this->authorize('update', $table);
+
         $table->update($request->all());
         if ($table->save()) {
             return response()->json([
@@ -55,6 +68,8 @@ class TableController extends Controller
 
     public function destroy(Table $table)
     {
+        $this->authorize('delete', $table);
+        
         $number = $table->table_number;
         if ($table->delete()) {
             return response()->json([
