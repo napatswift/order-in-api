@@ -24,6 +24,8 @@ class OrderController extends Controller
 
     public function index()
     {
+        $this->authorize('viewAny', Order::class);
+
         $user_id = Auth::id();
 
         if (Auth::user()->is_manager) {
@@ -61,11 +63,15 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
+        $this->authorize('view', $order);
+
         return new OrderResource($order);
     }
 
     public function store(StoreOrderRequest $request)
     {
+        $this->authorize('create', Order::class);
+
         $order = new OrderResource(Order::create($request->all()));
         if ($order->save()) {
             return response()->json([
@@ -82,6 +88,8 @@ class OrderController extends Controller
 
     public function update(UpdateOrderRequest $request, Order $order)
     {
+        $this->authorize('update', $order);
+
         $order->update($request->all());
         if ($order->save()) {
             return response()->json([
@@ -98,6 +106,8 @@ class OrderController extends Controller
 
     public function destroy(Order $order)
     {
+        $this->authorize('delete', $order);
+        
         if ($order->delete()) {
             return response()->json([
                 'success' => "Order deleted successfully"
