@@ -7,13 +7,21 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StorePromotionRequest;
 use App\Http\Requests\UpdatePromotionRequest;
 use App\Http\Resources\PromotionResource;
+use App\Models\Manager;
 use App\Models\Promotion;
+use Illuminate\Support\Facades\Auth;
 
 class PromotionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+        // $this->authorizeResource(Food::class, 'food');
+    }
+
     public function index()
     {
-        return Promotion::all();
+        return PromotionResource::collection(Promotion::all());
     }
 
     public function show(Promotion $promotion)
@@ -23,12 +31,27 @@ class PromotionController extends Controller
 
     public function store(StorePromotionRequest $request)
     {
-        $promotion = new PromotionResource(Promotion::create($request->all()));
+        // only manager can do this
+        $manager = Manager::findOrFail(Auth::id());
+
+        $promotion = Promotion::create(
+            array_merge($request->all(),
+            ['restaurant_id' => $manager->restaurant->id])
+        );
+
+        // $promotion->restaurant_id = Auth::user()->restaurant->id;
+
+        $im_extension = $request->file('image')->extension();
+        $promotion
+            ->addMediaFromRequest('image')
+            ->usingFileName(fake()->uuid().'.'.$im_extension)
+            ->toMediaCollection();
+        
         if ($promotion->save()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Promotion saved successfully',
-                'promotion' => $promotion
+                'promotion' => $promotion->id
             ], 201);
         }
         return response()->json([

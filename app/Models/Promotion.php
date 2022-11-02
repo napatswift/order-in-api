@@ -14,9 +14,14 @@ class Promotion extends Model implements HasMedia
     use HasFactory;
 
     protected $fillable = [
-        'promotion_price',
-        'start_date',
-        'end_date'
+        'promotion_code',
+        'name',
+        'description',
+        'discount_amount',
+        // 'max_discount_amount',
+        'begin_useable_date',
+        'end_useable_date',
+        'restaurant_id'
     ];
 
     public function food()
@@ -32,7 +37,7 @@ class Promotion extends Model implements HasMedia
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('cover')
-              ->width(1920)
+              ->width(800)
               ->sharpen(10);
     }
 

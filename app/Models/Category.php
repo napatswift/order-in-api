@@ -22,6 +22,11 @@ class Category extends Model implements HasMedia
         return $this->belongsToMany(Food::class);
     }
 
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
+
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('ship')

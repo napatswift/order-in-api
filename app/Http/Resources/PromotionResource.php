@@ -19,7 +19,8 @@ class PromotionResource extends JsonResource
             'promotion_code'  => $this->promotion_code,
             'name'            => $this->name,
             'description'     => $this->description,
-            'discount_amount' => $this->discount_amount
+            'discount_amount' => $this->discount_amount,
+            'image'           => $this->whenNotNull($this->getImage())
         ];
     }
 }

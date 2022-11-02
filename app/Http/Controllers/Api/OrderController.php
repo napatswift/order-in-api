@@ -22,7 +22,7 @@ class OrderController extends Controller
         $this->authorizeResource(Food::class, 'food');
     }
 
-    public function index(Request $request)
+    public function index()
     {
         $user_id = Auth::id();
 
