@@ -29,12 +29,35 @@ class CategoryTest extends TestCase
 
     public function test_add_category()
     {
-        $thaiFoodCategory = Category::create(['name' => 'อาหารไทย']);
-        $notThaiFoodCategory = Category::create(['name' => 'อาหารไม่ไทย']);
+        // create manager
+        $manager = new Manager();
+        $manager->name = fake()->name;
+        $manager->username = fake()->userName();
+        $manager->email = fake()->email();
+        $password_test = 'password';
+        $manager->password = bcrypt($password_test);
+        $manager->is_manager = true;
+        $manager->is_employee = false;
+        $manager->save();
+
+        // create restaurant
+        $restaurant = new Restaurant();
+        $restaurant->name = 'Restaurant Test';
+        $restaurant->owner_id = $manager->id;
+        $restaurant->save();
         
+        $thaiFoodCategory = Category::create([
+            'name' => 'อาหารไทย',
+            'restaurant_id' => $restaurant->id
+        ]);
+        $notThaiFoodCategory = Category::create([
+            'name' => 'อาหารไม่ไทย',
+            'restaurant_id' => $restaurant->id
+        ]);
+
         $this->assertDatabaseCount('categories', 2);
     }
-    
+
     public function test_add_category_for_food()
     {
         // create manager
@@ -55,7 +78,10 @@ class CategoryTest extends TestCase
         $restaurant->save();
 
         // add category
-        $thaiFoodCategory = Category::create(['name' => 'อาหารไทย']);
+        $thaiFoodCategory = Category::create([
+            'name' => 'อาหารไทย',
+            'restaurant_id' => $restaurant->id
+        ]);
 
         // if it's added
         $this->assertDatabaseCount('categories', 1);
