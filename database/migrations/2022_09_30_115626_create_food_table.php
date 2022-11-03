@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('food', function (Blueprint $table) {
             $table->id();
-            $table->char('food_name', 32);
+            $table->char('food_name', 128);
             $table->double('food_price');
             $table->string('food_detail', 1024);
             $table->integer('cooking_time'); // minute

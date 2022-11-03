@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Rating;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class RatingPolicy
 {
@@ -18,7 +19,7 @@ class RatingPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+        return Response::allow();
     }
 
     /**
@@ -30,7 +31,7 @@ class RatingPolicy
      */
     public function view(User $user, Rating $rating)
     {
-        return true;
+        return Response::allow();
     }
 
     /**
@@ -42,8 +43,8 @@ class RatingPolicy
     public function create(User $user)
     {
         return $user->is_manager == 0 && $user->is_employee == 0
-        ? Response::allow()
-        : Response::denyWithStatus(401, 'You are not a customer');
+            ? Response::allow()
+            : Response::denyWithStatus(401, 'You are not a customer');
     }
 
     /**
@@ -56,8 +57,8 @@ class RatingPolicy
     public function update(User $user, Rating $rating)
     {
         return $user->is_manager == 0 && $user->is_employee == 0
-        ? Response::allow()
-        : Response::denyWithStatus(401, 'You are not a customer');
+            ? Response::allow()
+            : Response::denyWithStatus(401, 'You are not a customer');
     }
 
     /**
@@ -70,8 +71,8 @@ class RatingPolicy
     public function delete(User $user, Rating $rating)
     {
         return $user->is_manager == 0 && $user->is_employee == 0
-        ? Response::allow()
-        : Response::denyWithStatus(401, 'You are not a customer');
+            ? Response::allow()
+            : Response::denyWithStatus(401, 'You are not a customer');
     }
 
     /**

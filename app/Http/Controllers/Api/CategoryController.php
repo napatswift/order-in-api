@@ -7,10 +7,16 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use App\Models\Manager;
 use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,6 +24,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Category::class);
+
         return CategoryResource::collection(Category::get());
     }
 
@@ -29,7 +37,16 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        $category = new CategoryResource(Category::create($request->all()));
+        $this->authorize('create', Category::class);
+
+        $manager = Manager::findOrFail(Auth::id());
+
+        $category = Category::create(
+            array_merge($request->all(),[
+                'restaurant_id' => $manager->restaurant->id
+            ])
+        );
+        $category = new CategoryResource($category);
 
         $im_extension = $request->file('image')->extension();
         $category
@@ -58,6 +75,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        $this->authorize('view', $category);
+
         return new CategoryResource($category);
     }
 
@@ -70,6 +89,8 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
+        $this->authorize('update', $category);
+
         $category->update($request->all());
         if ($category->save()) {
             return response()->json([
@@ -92,6 +113,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        $this->authorize('delete', $category);
+
         $name = $category->name;
         if ($category->delete()) {
             return response()->json([

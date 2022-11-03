@@ -8,6 +8,11 @@ use App\Models\Restaurant;
 
 class RestaurantController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +20,7 @@ class RestaurantController extends Controller
      */
     public function index()
     {
-        //
+        return response('Method Not Allowed', 405);
     }
 
     /**
@@ -26,7 +31,7 @@ class RestaurantController extends Controller
      */
     public function store(StoreRestaurantRequest $request)
     {
-        //
+        $this->authorize('create', Restaurant::class);
     }
 
     /**
@@ -37,7 +42,7 @@ class RestaurantController extends Controller
      */
     public function show(Restaurant $restaurant)
     {
-        //
+        $this->authorize('view', $restaurant);
     }
 
     /**
@@ -49,7 +54,7 @@ class RestaurantController extends Controller
      */
     public function update(UpdateRestaurantRequest $request, Restaurant $restaurant)
     {
-        //
+        $this->authorize('update', $restaurant);
     }
 
     /**
@@ -60,6 +65,6 @@ class RestaurantController extends Controller
      */
     public function destroy(Restaurant $restaurant)
     {
-        //
+        $this->authorize('delete', $restaurant);
     }
 }

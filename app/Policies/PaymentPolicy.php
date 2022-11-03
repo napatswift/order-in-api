@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class PaymentPolicy
 {
@@ -18,7 +19,7 @@ class PaymentPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+        return Response::allow();
     }
 
     /**
@@ -30,7 +31,7 @@ class PaymentPolicy
      */
     public function view(User $user, Payment $payment)
     {
-        return true;
+        return Response::allow();
     }
 
     /**
@@ -42,8 +43,8 @@ class PaymentPolicy
     public function create(User $user)
     {
         return $user->is_manager == 0 && $user->is_employee == 0
-        ? Response::allow()
-        : Response::denyWithStatus(401, 'You are not a customer');
+            ? Response::allow()
+            : Response::denyWithStatus(401, 'You are not a customer');
     }
 
     /**
@@ -55,7 +56,7 @@ class PaymentPolicy
      */
     public function update(User $user, Payment $payment)
     {
-        return true;
+        return Response::allow();
     }
 
     /**
@@ -67,7 +68,7 @@ class PaymentPolicy
      */
     public function delete(User $user, Payment $payment)
     {
-        return true;
+        return Response::deny();
     }
 
     /**
