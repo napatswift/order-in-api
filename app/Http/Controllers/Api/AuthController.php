@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use App\Models\User;
+use App\Models\Manager;
+use App\Models\Employee;
+use App\Models\Customer;
 
 class AuthController extends Controller
 {
@@ -23,8 +27,6 @@ class AuthController extends Controller
 
     public function register(Request $request){
 
-        $this->authorize('create', User::class);
-
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -36,22 +38,29 @@ class AuthController extends Controller
         }
 
         if($user->is_manager == 1){
-            $user = User::create([
+            $user = Employee::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'is_manager' => $request->is_manager,
-                'is_employee' => $request->is_employee,
+                'password' => bcrypt($request->password),          
+                'restaurant_id' => $request->restaurant_id,
             ]);
         }
 
         if($user->is_employee == 1){
-            $user = User::create([
+            $user = Customer::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => bcrypt(str_random(10)),
+                'password' => bcrypt($request->password),
+                'restaurant_id' => $request->restaurant_id,
             ]);
         }
+
+        $user = Manager::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+
 
         // $user = User::create([
         //     'name' => $request->name,
