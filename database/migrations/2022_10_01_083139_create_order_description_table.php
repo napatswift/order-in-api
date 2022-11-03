@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::create('order_descriptions', function (Blueprint $table) {
             $table->id();
             $table->integer('order_quantity');
-            $table->integer('order_status');
+            $table->integer('order_status')->default(0);
             $table->text('order_request')->nullable();
             $table->double('order_price');
             $table->foreignIdFor(Order::class);

@@ -45,6 +45,7 @@ class Category extends Model implements HasMedia
                 'ship' => $mediaItems[0]->getUrl('ship')
             ];
         }
+        
         return $mediaUrl;
     }
 }

@@ -17,15 +17,24 @@ user_agents = [
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
   ]
 
-manager_req_data = {'username': 'manager.sample', 'password': 'password'}
-response = requests.post(base_url+'/auth/login', data=manager_req_data)
-if response.status_code != 200:
-    exit()
-manager_access_token = response.json()['access_token']
+def get_access_token(username):
+    manager_req_data = {'username': username, 'password': 'password'}
+    response = requests.post(base_url+'/auth/login', data=manager_req_data)
+    if response.status_code != 200:
+        return
+    return response.json()['access_token']
+
+manager_access_token = get_access_token('manager.sample')
+customer_access_token = get_access_token('customer.sample')
+
 manger_headers = {
-    'Authorization': 'Bearer '+manager_access_token,
-    'Accept': 'application/json',
-}
+    'Authorization': 'Bearer ' + manager_access_token,
+    'Accept': 'application/json',}
+
+customer_headers = {
+    'Authorization': 'Bearer ' + customer_access_token,
+    'Accept': 'application/json',}
+
 print('manger logged in')
 
 data_menu = json.load(open('./delivery-menu.json'))
@@ -111,3 +120,4 @@ for menu_group in menu_groups:
             print(response.json())
         sleep(1)
 
+print('-'*30)
