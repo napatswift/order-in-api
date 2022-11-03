@@ -11,18 +11,29 @@ use App\Http\Requests\UpdateOrderDescriptionRequest;
 
 class OrderDescriptionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+    
     public function index()
     {
+        $this->authorize('viewAny', OrderDescription::class);
+
         return OrderDescription::all();
     }
 
     public function show(OrderDescription $orderDescription)
     {
+        $this->authorize('view', $orderDescription);
+
         return new OrderDescriptionResource($orderDescription);
     }
 
     public function store(StoreOrderDescriptionRequest $request)
     {
+        $this->authorize('create', OrderDescription::class);
+
         $orderDescription = new OrderDescriptionResource(OrderDescription::create($request->all()));
         if ($orderDescription->save()) {
             return response()->json([
@@ -39,6 +50,8 @@ class OrderDescriptionController extends Controller
 
     public function update(UpdateOrderDescriptionRequest $request, OrderDescription $orderDescription)
     {
+        $this->authorize('update', $orderDescription);
+
         $orderDescription->update($request->all());
         if ($orderDescription->save()) {
             return response()->json([
@@ -55,6 +68,8 @@ class OrderDescriptionController extends Controller
 
     public function destroy(OrderDescription $orderDescription)
     {
+        $this->authorize('delete', $orderDescription);
+        
         if ($orderDescription->delete()) {
             return response()->json([
                 'success' => true,
