@@ -41,7 +41,9 @@ class ManagerPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->is_manager == 1 || $user->is_employee == 1
+        ? allow()
+        : denyWithStatus(401, 'You are not a manager');
     }
 
     /**
