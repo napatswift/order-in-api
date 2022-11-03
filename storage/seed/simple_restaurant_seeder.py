@@ -46,10 +46,34 @@ def add_category(cat_name, imagefname):
         )
 
     if response.status_code != 201:
-        print(response.json())
+        print(response.json()['message'])
         return
 
     return response.json()['category']
+
+
+for menu_group in menu_groups:
+    items = menu_group['items']
+    for item in items:
+        image_fpath = []
+        if 'photo' in item:
+            photo_id = item['photo']['photoId']
+            image_fpath = [fname for fname in images if photo_id in fname]
+        else: continue
+
+        if image_fpath: continue
+        
+        url = item['photo']['largeUrl']
+        img_path = 'assets/'+re.sub('.*/', '', url)
+        with open(img_path, 'wb') as fp:
+            print('get "{}"'.format(url))
+            response = requests.get(url, headers={
+                'User-Agent': random.choice(user_agents)
+            })
+            if response.status_code != 200:
+                print(response)
+                continue
+            fp.write(response.content)
 
 for menu_group in menu_groups:
     print(menu_group['name'])
@@ -65,20 +89,9 @@ for menu_group in menu_groups:
         if 'photo' in item:
             photo_id = item['photo']['photoId']
             image_fpath = [fname for fname in images if photo_id in fname]
-        
+
         if not image_fpath:
-            url = item['photo']['largeUrl']
-            img_path = 'assets/'+re.sub('.*/', '', url)
-            with open(img_path, 'wb') as fp:
-                print('get "{}"'.format(url))
-                response = requests.get(url, headers={
-                    'User-Agent': random.choice(user_agents)
-                })
-                if response.status_code != 200:
-                    print(response)
-                    continue
-                fp.write(response.content)
-            image_fpath = [img_path]
+            continue
 
         food_data_req = {
             'food_name': item['name'],
@@ -94,7 +107,7 @@ for menu_group in menu_groups:
                 data=food_data_req,
                 files={'image': img},
                 headers=manger_headers)
-        
-        print(response.json())
+        if response.status_code != 201:
+            print(response.json())
         sleep(1)
 
