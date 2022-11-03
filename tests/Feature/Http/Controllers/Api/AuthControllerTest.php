@@ -1,18 +1,19 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\Employee;
 use App\Models\Manager;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class LoginTest extends TestCase
+class AuthControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $endPoint = '/api/auth/login';
+    protected $endPoint = '/api/auth';
 
     public function test_manager_login()
     {
@@ -26,7 +27,7 @@ class LoginTest extends TestCase
         $manager->is_employee = false;
         $manager->save();
 
-        $response = $this->postJson($this->endPoint, [
+        $response = $this->postJson($this->endPoint.'/login', [
             'username' => $manager->username,
             'password' => $password_test,
         ]);
@@ -46,7 +47,7 @@ class LoginTest extends TestCase
         $user->is_employee = false;
         $user->save();
 
-        $response = $this->postJson($this->endPoint, [
+        $response = $this->postJson($this->endPoint.'/login', [
             'username' => $user->username,
             'password' => $password_test,
         ]);
@@ -66,7 +67,7 @@ class LoginTest extends TestCase
         $employee->is_employee = false;
         $employee->save();
 
-        $response = $this->postJson($this->endPoint, [
+        $response = $this->postJson($this->endPoint.'/login', [
             'username' => $employee->username,
             'password' => $password_test,
         ]);
@@ -76,9 +77,9 @@ class LoginTest extends TestCase
 
     public function test_fail_login()
     {
-        $response = $this->postJson($this->endPoint, [
+        $response = $this->postJson($this->endPoint.'/login', [
             'username' => 'username',
-            'password' => bcrypt('password'),
+            'password' => 'password',
         ]);
 
         $response->assertStatus(401);

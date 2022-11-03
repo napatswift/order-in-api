@@ -97,7 +97,7 @@ class CategoryController extends Controller
                 'success' => true,
                 'message' => 'Category updated successfully',
                 'category' => $category
-            ], 200);
+            ], 201);
         }
         return response()->json([
             'success' => false,
