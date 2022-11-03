@@ -17,7 +17,7 @@ user_agents = [
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
   ]
 
-manager_req_data = {'username': 'kprosacco', 'password': 'password'}
+manager_req_data = {'username': 'manager.sample', 'password': 'password'}
 response = requests.post(base_url+'/auth/login', data=manager_req_data)
 if response.status_code != 200:
     exit()
@@ -55,6 +55,7 @@ for menu_group in menu_groups:
     print(menu_group['name'])
 
     cat_id = add_category(menu_group['name'], random.choice(images))
+    if cat_id is None: continue
 
     items = menu_group['items']
     for item in items:
@@ -96,3 +97,4 @@ for menu_group in menu_groups:
         
         print(response.json())
         sleep(1)
+

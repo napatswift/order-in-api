@@ -30,13 +30,42 @@ class SimpleRestaurantSeeder extends Seeder
      */
     public function run()
     {
-
-        User::factory(100)->create();
+        $manager = new Manager();
+        $manager->name = fake()->name;
+        $manager->username = 'manager.sample';
+        $manager->email = fake()->email();
+        $password_test = 'password';
+        $manager->password = bcrypt($password_test);
+        $manager->is_manager = true;
+        $manager->is_employee = false;
+        $manager->save();
 
         $restaurant = new Restaurant();
         $restaurant->name = 'Restaurant Test';
         $restaurant->owner_id = Manager::inRandomOrder()->first()->id;
         $restaurant->save();
+
+        $employee = new Employee();
+        $employee->name = fake()->name;
+        $employee->username = 'customer.sample';
+        $employee->email = fake()->email();
+        $password_test = 'password';
+        $employee->password = bcrypt($password_test);
+        $employee->is_manager = false;
+        $employee->is_employee = false;
+        $employee->restaurant()->associate($restaurant);
+        $employee->save();
+
+        $user = new Customer();
+        $user->name = fake()->name;
+        $user->username = 'customer.sample';
+        $user->email = fake()->email();
+        $password_test = 'password';
+        $user->password = bcrypt($password_test);
+        $user->is_manager = false;
+        $user->is_employee = false;
+        $user->restaurant()->associate($restaurant);
+        $user->save();
 
         $employees = Employee::get();
 
