@@ -11,18 +11,29 @@ use App\Http\Requests\UpdateFoodAllergyRequest;
 
 class FoodAllergyController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function index() 
     {
+        $this->authorize('viewAny', FoodAllergy::class);
+
         return FoodAllergy::all();
     }
 
     public function show(FoodAllergy $foodAllergy)
     {
+        $this->authorize('view', $foodAllergy);
+
         return new FoodAllergyResource($foodAllergy);
     }
 
     public function store(StoreFoodAllergyRequest $request)
     {
+        $this->authorize('create', FoodAllergy::class);
+
         $foodAllergy = new FoodAllergyResource(FoodAllergy::create($request->all()));
         if ($foodAllergy->save()) {
             return response()->json([
@@ -39,6 +50,8 @@ class FoodAllergyController extends Controller
 
     public function update(UpdateFoodAllergyRequest $request, FoodAllergy $foodAllergy) 
     {
+        $this->authorize('update', $foodAllergy);
+
         $foodAllergy->update($request->all());
         if ($foodAllergy->save()) {
             return response()->json([
@@ -55,6 +68,8 @@ class FoodAllergyController extends Controller
 
     public function destroy(FoodAllergy $foodAllergy)
     {
+        $this->authorize('delete', $foodAllergy);
+        
         $name = $foodAllergy->food_allergy;
         if ($foodAllergy->delete()) {
             return response()->json([

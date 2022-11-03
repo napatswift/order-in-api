@@ -21,16 +21,21 @@ class PromotionController extends Controller
 
     public function index()
     {
+        $this->authorize('viewAny', Promotion::class);
+
         return PromotionResource::collection(Promotion::all());
     }
 
     public function show(Promotion $promotion)
     {
+        $this->authorize('view', $promotion);
+
         return new PromotionResource($promotion);
     }
 
     public function store(StorePromotionRequest $request)
     {
+        $this->authorize('create', Promotion::class);
         // only manager can do this
         $manager = Manager::findOrFail(Auth::id());
 
@@ -62,6 +67,8 @@ class PromotionController extends Controller
 
     public function update(UpdatePromotionRequest $request, Promotion $promotion)
     {
+        $this->authorize('update', $promotion);
+
         $promotion->update($request->all());
         if ($promotion->save()) {
             return response()->json([
@@ -78,6 +85,8 @@ class PromotionController extends Controller
 
     public function destroy(Promotion $promotion)
     {
+        $this->authorize('delete', $promotion);
+        
         if ($promotion->delete()) {
             return response()->json([
                 'success' => "Promotion deleted successfully"

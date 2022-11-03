@@ -11,18 +11,29 @@ use App\Models\Payment;
 
 class PaymentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
     public function index()
     {
+        $this->authorize('viewAny', Payment::class);
+
         return Payment::all();
     }
 
     public function show(Payment $payment)
     {
+        $this->authorize('view', $payment);
+
         return new PaymentResource($payment);
     }
 
     public function store(StorePaymentRequest $request)
     {
+        $this->authorize('create', Payment::class);
+
         $payment = new PaymentResource(Payment::create($request->all()));
         if ($payment->save()) {
             return response()->json([
@@ -39,6 +50,8 @@ class PaymentController extends Controller
 
     public function update(UpdatePaymentRequest $request, Payment $payment)
     {
+        $this->authorize('update', $payment);
+
         $payment->update($request->all());
         if ($payment->save()) {
             return response()->json([
@@ -55,6 +68,8 @@ class PaymentController extends Controller
 
     public function destroy(Payment $payment)
     {
+        $this->authorize('delete', $payment);
+        
         if ($payment->delete()) {
             return response()->json([
                 'success' => "Payment deleted successfully"
