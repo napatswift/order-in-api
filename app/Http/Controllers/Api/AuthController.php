@@ -23,6 +23,8 @@ class AuthController extends Controller
 
     public function register(Request $request){
 
+        $this->authorize('create', User::class);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -33,11 +35,29 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        if($user->is_manager == 1){
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'is_manager' => $request->is_manager,
+                'is_employee' => $request->is_employee,
+            ]);
+        }
+
+        if($user->is_employee == 1){
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt(str_random(10)),
+            ]);
+        }
+
+        // $user = User::create([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'password' => Hash::make($request->password),
+        // ]);
 
         $token = JWTAuth::fromUser($user);
 
