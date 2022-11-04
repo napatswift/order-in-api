@@ -8,4 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'payment_method',
+        'date_payment'
+    ];
+
+    /**
+     * mapper from id to name
+     */
+    public $paymentType = [
+        'เงินสด',
+        'โอนเงิน',
+    ];
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

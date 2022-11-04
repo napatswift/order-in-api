@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Restaurant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,8 +15,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tables', function (Blueprint $table) {
-            $table->char('table_number', 2)->primary();
-            $table->char('available', 1);
+            $table->id();
+            $table->string('table_number');
+            $table->boolean('available');
+            $table->foreignIdFor(Restaurant::class);
             $table->timestamps();
         });
     }

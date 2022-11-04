@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Restaurant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,10 +14,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('promotion', function (Blueprint $table) {
-            $table->double('promotion_price');
-            $table->datetime('start_date'); // 1st day to have promotion
-            $table->datetime('end_date'); // last day 
+        Schema::create('promotions', function (Blueprint $table) {
+            $table->id();
+            $table->string('promotion_code');
+            $table->string('name');
+            $table->string('description');
+            $table->double('discount_amount');
+            // $table->double('max_discount_amount')->nullable(); // for percent discount
+            $table->datetime('begin_useable_date'); // 1st day to have promotion
+            $table->datetime('end_useable_date'); // last day
+            $table->foreignIdFor(Restaurant::class);
             $table->timestamps();
         });
     }
@@ -28,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('promotion');
+        Schema::dropIfExists('promotions');
     }
 };

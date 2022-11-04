@@ -14,7 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('food_allergies', function (Blueprint $table) {
-            $table->char('food_allergies', 20);
+            $table->id();
+            $table->string('allergen');
             $table->timestamps();
         });
     }
