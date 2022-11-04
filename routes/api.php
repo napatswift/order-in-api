@@ -41,5 +41,7 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
-    Route::post('register', [AuthController::class, 'register']);
+    Route::post('register/manager', [AuthController::class, 'registerManager']);
+    Route::post('register/employee', [AuthController::class, 'registerEmployee']);
+    Route::post('register/customer', [AuthController::class, 'addCustomer']);
 });
