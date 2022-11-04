@@ -84,4 +84,162 @@ class AuthControllerTest extends TestCase
 
         $response->assertStatus(401);
     }
+
+    public function test_manager_register()
+    {
+        $name = fake()->name;
+        $username = fake()->userName();
+        $email = fake()->email();
+        $password_test = 'password';
+
+        $response = $this->postJson($this->endPoint.'/register/manager', [
+            'name' => $name,
+            'username' => $username,
+            'email' => $email,
+            'password' => $password_test,
+        ]);
+
+        $response->assertStatus(201);
+
+        $response = $this->postJson($this->endPoint.'/login', [
+            'username' => $username,
+            'password' => $password_test,
+        ]);
+
+        $response->assertStatus(200);
+    }
+
+    public function test_manager_registers_employee()
+    {
+
+        $manager = new Manager();
+        $manager->name = fake()->name;
+        $manager->username = fake()->userName();
+        $manager->email = fake()->email();
+        $password_test = 'password';
+        $manager->password = bcrypt($password_test);
+        $manager->is_manager = true;
+        $manager->is_employee = false;
+        $manager->save();
+
+        $response = $this->postJson($this->endPoint.'/login', [
+            'username' => $manager->username,
+            'password' => $password_test,
+        ]);
+
+        $response->assertStatus(200);
+        $accessToken = $response['access_token'];
+
+        $name = fake()->name;
+        $username = fake()->userName();
+        $email = fake()->email();
+        $password_test = 'password';
+
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $accessToken,
+        ])->postJson($this->endPoint.'/register/employee', [
+            'name' => $name,
+            'username' => $username,
+            'email' => $email,
+            'password' => $password_test,
+        ]);
+
+        $response->assertStatus(201);
+
+        $response = $this->postJson($this->endPoint.'/login', [
+            'username' => $username,
+            'password' => $password_test,
+        ]);
+
+        $response->assertStatus(200);
+    }
+
+    public function test_not_manager_registers_employee()
+    {
+        $name = fake()->name;
+        $username = fake()->userName();
+        $email = fake()->email();
+        $password_test = 'password';
+
+        $response = $this->postJson(
+            $this->endPoint.'/register/employee', [
+                'name' => $name,
+                'username' => $username,
+                'email' => $email,
+                'password' => $password_test,
+        ]);
+
+        $response->assertStatus(401);
+
+        $response = $this->postJson($this->endPoint.'/login', [
+            'username' => $username,
+            'password' => $password_test,
+        ]);
+
+        $response->assertStatus(401);
+    }
+
+    public function test_employee_registers_customer()
+    {
+
+        $manager = new Manager();
+        $manager->name = fake()->name;
+        $manager->username = fake()->userName();
+        $manager->email = fake()->email();
+        $password_test = 'password';
+        $manager->password = bcrypt($password_test);
+        $manager->is_manager = true;
+        $manager->is_employee = false;
+        $manager->save();
+
+        $response = $this->postJson($this->endPoint.'/login', [
+            'username' => $manager->username,
+            'password' => $password_test,
+        ]);
+
+        $response->assertStatus(200);
+        $accessToken = $response['access_token'];
+
+        $name = fake()->name;
+        $username = fake()->userName();
+        $email = fake()->email();
+        $password_test = 'password';
+
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $accessToken,
+        ])->postJson($this->endPoint.'/register/employee', [
+            'name' => $name,
+            'username' => $username,
+            'email' => $email,
+            'password' => $password_test,
+        ]);
+
+        $response->assertStatus(201);
+
+        $response = $this->postJson($this->endPoint.'/login', [
+            'username' => $username,
+            'password' => $password_test,
+        ]);
+
+        $response->assertStatus(200);
+
+        $employeeAccessToken = $response['access_token'];
+
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $employeeAccessToken,
+        ])->postJson($this->endPoint.'/register/customer');
+
+        $response->assertStatus(201);
+
+        
+        $response = $this->postJson($this->endPoint.'/login', [
+            'username' => $response['customerLogin']['username'],
+            'password' => $response['customerLogin']['password'],
+        ]);
+
+        $response->assertStatus(200);
+    }
 }
