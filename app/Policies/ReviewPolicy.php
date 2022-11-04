@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class ReviewPolicy
 {
@@ -19,8 +20,8 @@ class ReviewPolicy
     public function viewAny(User $user)
     {
         return $user->is_manager
-        ? Response::allow()
-        : Response::denyWithStatus(401, 'You are not a manager or employee');
+            ? Response::allow()
+            : Response::denyWithStatus(401, 'You are not a manager or employee');
     }
 
     /**
@@ -33,8 +34,8 @@ class ReviewPolicy
     public function view(User $user, Review $review)
     {
         return $user->is_manager == 1
-        ? Response::allow()
-        : Response::denyWithStatus(401, 'You are not a manager or employee');
+            ? Response::allow()
+            : Response::denyWithStatus(401, 'You are not a manager or employee');
     }
 
     /**
@@ -46,8 +47,8 @@ class ReviewPolicy
     public function create(User $user)
     {
         return $uesr->is_manager == 0 && $user->is_employee == 0
-        ? Response::allow()
-        : Response::denyWithStatus(401, 'You are not a customer');
+            ? Response::allow()
+            : Response::denyWithStatus(401, 'You are not a customer');
     }
 
     /**
@@ -60,8 +61,8 @@ class ReviewPolicy
     public function update(User $user, Review $review)
     {
         return $user->is_manager == 0 && $user->is_employee == 0
-        ? Response::allow()
-        : Response::denyWithStatus(401, 'You are not a customer');
+            ? Response::allow()
+            : Response::denyWithStatus(401, 'You are not a customer');
     }
 
     /**
@@ -74,8 +75,8 @@ class ReviewPolicy
     public function delete(User $user, Review $review)
     {
         return $user->is_manager == 0 && $user->is_employee == 0
-        ? Response::allow()
-        : Response::denyWithStatus(401, 'You are not a customer');
+            ? Response::allow()
+            : Response::denyWithStatus(401, 'You are not a customer');
     }
 
     /**

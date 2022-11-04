@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Promotion;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class PromotionPolicy
 {
@@ -18,7 +19,7 @@ class PromotionPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+        return Response::allow();
     }
 
     /**
@@ -30,7 +31,7 @@ class PromotionPolicy
      */
     public function view(User $user, Promotion $promotion)
     {
-        return true;
+        return Response::allow();
     }
 
     /**
@@ -42,8 +43,8 @@ class PromotionPolicy
     public function create(User $user)
     {
         return $user->is_manager == 1
-        ? Response::allow()
-        : Response::denyWithStatus(401, 'You are not a manager');
+            ? Response::allow()
+            : Response::denyWithStatus(401, 'You are not a manager');
     }
 
     /**
@@ -56,8 +57,8 @@ class PromotionPolicy
     public function update(User $user, Promotion $promotion)
     {
         return $user->is_manager == 1
-        ? Response::allow()
-        : Response::denyWithStatus(401, 'You are not a manager');
+            ? Response::allow()
+            : Response::denyWithStatus(401, 'You are not a manager');
     }
 
     /**
@@ -70,8 +71,8 @@ class PromotionPolicy
     public function delete(User $user, Promotion $promotion)
     {
         return $user->is_manager == 1
-        ? Response::allow()
-        : Response::denyWithStatus(401, 'You are not a manager');
+            ? Response::allow()
+            : Response::denyWithStatus(401, 'You are not a manager');
     }
 
     /**

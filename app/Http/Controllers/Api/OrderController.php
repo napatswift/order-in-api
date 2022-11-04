@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PlaceOrderRequest;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Http\Resources\OrderResource;
@@ -10,16 +11,19 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Customer;
 use App\Models\Employee;
+use App\Models\Food;
 use App\Models\Manager;
+use App\Models\OrderDescription;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth:api');
-        $this->authorizeResource(Food::class, 'food');
+        // $this->authorizeResource(Order::class, 'orders');
     }
 
     public function index()
@@ -117,5 +121,61 @@ class OrderController extends Controller
             'success' => false,
             'message' => 'Order deleted failed'
         ], 500);
+    }
+
+    public function placeNewOrder(PlaceOrderRequest $request)
+    {
+        $this->authorize('create', Order::class);
+
+        $customer = Customer::findOrFail(Auth::id());
+        $restaurant_id = $customer->restaurant->id;
+        $new_order = new Order();
+        $new_order->restaurant()->associate($restaurant_id);
+        $new_order->customer()->associate(Auth::id());
+        if (!$new_order->save()) {
+            return response()->json([
+                "success" => true,
+                "message" => "Order saved!",
+                "order"   => new OrderResource($new_order),
+            ], 422);
+        }
+
+        $order_items = $request->get('order_items');
+        $order_description_array = collect([]);
+
+        foreach ($order_items as $order_item_request) {
+            $food = Food::find($order_item_request["food_id"]);
+            
+            $order_description = new OrderDescription();
+            $order_description->order_status = 0;
+            $order_description->order_quantity = $order_item_request["order_quantity"];
+            if (array_key_exists('order_request', $order_item_request)){
+                $order_description->order_request = $order_item_request["order_request"];
+            }
+            $order_description->food()->associate($order_item_request["food_id"]);
+            $order_description->order_price = $food->food_price;
+            $order_description->order()->associate($new_order->id);
+            // $order_description->save();
+
+            $order_description_array->push($order_description);
+        }
+
+        if (!$new_order
+                ->orderDescription()
+                ->saveMany($order_description_array)
+            ) {
+            $new_order->delete();
+            return response()->json([
+                "success" => true,
+                "message" => "Order saved!",
+                "order"   => new OrderResource($new_order),
+            ], 422);
+        }
+        
+        return response()->json([
+            "success" => true,
+            "message" => "Order saved!",
+            "order"   => new OrderResource($new_order),
+        ], 201);
     }
 }
