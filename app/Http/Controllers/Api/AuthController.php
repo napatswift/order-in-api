@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Manager;
 use App\Models\Employee;
 use App\Models\Customer;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -25,53 +26,77 @@ class AuthController extends Controller
         $this->middleware('auth:api', ['except' => ['login']]);
     }
 
-    public function register(Request $request){
-
+    public function registerManager(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        if($user->is_manager == 1){
-            $user = Employee::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),          
-                'restaurant_id' => $request->restaurant_id,
-            ]);
-        }
-
-        if($user->is_employee == 1){
-            $user = Customer::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'restaurant_id' => $request->restaurant_id,
-            ]);
-        }
-
-        $user = Manager::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
 
-
-        // $user = User::create([
-        //     'name' => $request->name,
-        //     'email' => $request->email,
-        //     'password' => Hash::make($request->password),
-        // ]);
+        $manager = Manager::create([
+            'user_id' => $user->id,
+        ]);
 
         $token = JWTAuth::fromUser($user);
 
-        return response()->json(compact('user','token'),201);   
+        return response()->json(compact('user', 'manager', 'token'), 201);
+    }
 
+    public function registerEmployee(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
+            'restaurant_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+
+        $employee = Employee::create([
+            'user_id' => $user->id,
+            'restaurant_id' => $request->restaurant_id,
+        ]);
+
+        $token = JWTAuth::fromUser($user);
+
+        return response()->json(compact('user', 'employee', 'token'), 201);
+    }
+
+    public function addCustomer()
+    {
+        $user = User::create([
+            'name' => Str::random(10),
+            'email' => Str::random(10) . '@gmail.com',
+            'password' => bcrypt(Str::random(10)),
+        ]);
+
+        $customer = Customer::create([
+            'user_id' => $user->id,
+        ]);
+
+        $token = JWTAuth::fromUser($user);
+
+        return response()->json(compact('user', 'customer', 'token'), 201);
     }
 
     /**
