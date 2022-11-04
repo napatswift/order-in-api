@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use App\Models\User;
+use App\Models\Manager;
+use App\Models\Employee;
+use App\Models\Customer;
 
 class AuthController extends Controller
 {
@@ -19,6 +23,55 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login']]);
+    }
+
+    public function register(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        if($user->is_manager == 1){
+            $user = Employee::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),          
+                'restaurant_id' => $request->restaurant_id,
+            ]);
+        }
+
+        if($user->is_employee == 1){
+            $user = Customer::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'restaurant_id' => $request->restaurant_id,
+            ]);
+        }
+
+        $user = Manager::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+
+
+        // $user = User::create([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'password' => Hash::make($request->password),
+        // ]);
+
+        $token = JWTAuth::fromUser($user);
+
+        return response()->json(compact('user','token'),201);   
+
     }
 
     /**
