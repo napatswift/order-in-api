@@ -47,7 +47,7 @@ class SimpleRestaurantSeeder extends Seeder
 
         $employee = new Employee();
         $employee->name = fake()->name;
-        $employee->username = 'customer.sample';
+        $employee->username = 'employee.sample';
         $employee->email = fake()->email();
         $password_test = 'password';
         $employee->password = bcrypt($password_test);
