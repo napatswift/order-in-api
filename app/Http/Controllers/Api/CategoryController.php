@@ -52,7 +52,8 @@ class CategoryController extends Controller
         $category
             ->addMediaFromRequest('image')
             ->usingFileName(fake()->uuid().'.'.$im_extension)
-            ->toMediaCollection();
+            ->toMediaCollection()
+            ->store('images', 's3');
 
         if ($category->save()) {
             return response()->json([
