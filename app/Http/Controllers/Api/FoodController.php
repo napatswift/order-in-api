@@ -88,7 +88,8 @@ class FoodController extends Controller
         $food
             ->addMediaFromRequest('image')
             ->usingFileName(fake()->uuid().'.'.$im_extension)
-            ->toMediaCollection();
+            ->toMediaCollection()
+            ->store('images', 's3');
 
         if ($food->save()) {
             $food;
