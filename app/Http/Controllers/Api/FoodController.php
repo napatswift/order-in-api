@@ -82,8 +82,7 @@ class FoodController extends Controller
 
         if($request->hasFile('image')) {
             $im_extension = $request->file('image')->extension();
-            $food->addMediaFromRequest('image')
-                ->useDisk('s3')
+            $food->addMediaFromRequest('image','s3')
                  ->usingFileName(fake()->uuid().'.'.$im_extension)
                  ->toMediaCollection();
         }

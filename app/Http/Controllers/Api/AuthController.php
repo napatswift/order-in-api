@@ -47,8 +47,7 @@ class AuthController extends Controller
 
         if($request->hasFile('image')) {
             $im_extension = $request->file('image')->extension();
-            $manager->addMediaFromRequest('image')
-                    ->useDisk('s3')
+            $manager->addMediaFromRequest('image', 's3')
                     ->usingFileName(fake()->uuid().'.'.$im_extension)
                     ->toMediaCollection();
         }
@@ -91,8 +90,7 @@ class AuthController extends Controller
         $employee = new Employee();
         if($request->hasFile('image')) {
             $im_extension = $request->file('image')->extension();
-            $employee->addMediaFromRequest('image')
-                     ->useDisk('s3')
+            $employee->addMediaFromRequest('image', 's3')
                      ->usingFileName(fake()->uuid().'.'.$im_extension)
                      ->toMediaCollection();
         }   
