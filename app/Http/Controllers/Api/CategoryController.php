@@ -50,9 +50,9 @@ class CategoryController extends Controller
         if($request->hasFile('image')) {
             $im_extension = $request->file('image')->extension();
             $category->addMediaFromRequest('image')
+                        ->useDisk('s3')
                           ->usingFileName(fake()->uuid().'.'.$im_extension)
-                          ->toMediaCollection()
-                          ->useDisk('s3');
+                          ->toMediaCollection();
         }
 
         if ($category->save()) {
