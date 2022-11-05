@@ -47,18 +47,18 @@ class AuthController extends Controller
 
         if($request->hasFile('image')) {
             $im_extension = $request->file('image')->extension();
-            $manager
-                ->addMediaFromRequest('image')
-                ->usingFileName(fake()->uuid().'.'.$im_extension)
-                ->toMediaCollection()
-                ->useDisk('s3');
+            $url= $request->addMediaFromRequest('image')
+                          ->storeAs('food', fake()->uuid().'.'.$im_extension, 's3')
+                          ->toMediaCollection();
         }
+
         $manager->name = $request->name;
         $manager->email = $request->email;
         $manager->username = $request->username;
         $manager->password = bcrypt($request->password);
         $manager->is_manager = true;
         $manager->is_employee = false;
+        $manager->getImage = $url ? $url : null;
         $manager->save();
 
         $managerUserModel = User::find($manager->id);
@@ -87,13 +87,14 @@ class AuthController extends Controller
         $manager = Manager::find(Auth::id());
         $restaurant = $manager->restaurant;
 
+        if($request->hasFile('image')) {
+            $im_extension = $request->file('image')->extension();
+            $url= $request->addMediaFromRequest('image')
+                          ->storeAs('food', fake()->uuid().'.'.$im_extension, 's3')
+                          ->toMediaCollection();
+        }
+
         $employee = new Employee();
-        $im_extension = $request->file('image')->extension();
-        $employee
-            ->addMediaFromRequest('image')
-            ->usingFileName(fake()->uuid().'.'.$im_extension)
-            ->toMediaCollection()
-            ->useDisk('s3');
         $employee->name = $request->name;
         $employee->email = $request->email;
         $employee->username = $request->username;
@@ -101,6 +102,7 @@ class AuthController extends Controller
         $employee->restaurant()->associate($restaurant);
         $employee->is_manager = false;
         $employee->is_employee = true;
+        $employee->getImage = $url ? $url : null;
         $employee->save();
 
         $user = User::find($employee->id);
