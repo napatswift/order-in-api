@@ -2,7 +2,6 @@ import os
 import random
 import re
 from time import sleep
-from bs4 import BeautifulSoup as bs
 import json
 import requests
 import numpy as np
@@ -17,25 +16,62 @@ user_agents = [
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
   ]
 
-def get_access_token(username):
-    manager_req_data = {'username': username, 'password': 'password'}
-    response = requests.post(base_url+'/auth/login', data=manager_req_data)
-    if response.status_code != 200:
-        return
-    return response.json()['access_token']
+response = requests.post(base_url+'/auth/register/manager', {
+    "name": "Manager 1",
+    "username": "manager.sample",
+    "email": "example.manager1@email.com",
+    "password": "password"
+})
 
-manager_access_token = get_access_token('manager.sample')
-customer_access_token = get_access_token('customer.sample')
+if response.status_code != 201:
+    print(response, response.json())
+
+response = requests.post(base_url+'/auth/login', {
+    'username': 'manager.sample',
+    'password': 'password',
+})
+
+manager_access_token = response.json()['access_token']
 
 manger_headers = {
     'Authorization': 'Bearer ' + manager_access_token,
     'Accept': 'application/json',}
 
-customer_headers = {
-    'Authorization': 'Bearer ' + customer_access_token,
-    'Accept': 'application/json',}
+response = requests.post(base_url+'/restaurant',
+    {'name': 'My Restaurant',},
+    headers=manger_headers)
 
-print('manger logged in')
+if response.status_code == 201:
+    print('restaurant created')
+else:
+    print(response, response.json())
+
+for i in range(10):
+    # break
+    response = requests.post(base_url+'/auth/register/employee', data={
+        "name": "Employee {}".format(i),
+        "username": "employee{}".format(i),
+        "email": f"example.em{i}@email.com",
+        "password": "password"
+        }, headers=manger_headers)
+
+    if response.status_code == 201:
+        print('employee created!')
+    else:
+        print(response,'employee not created!')
+
+for a in ['A', 'B']:
+    # break
+    for i in range(5):
+        response = requests.post(base_url+'/tables', {
+            'table_number': f'{a}{i}',
+            'available': 1,
+        }, headers=manger_headers)
+        print(response.json())
+
+# customer_headers = {
+#     'Authorization': 'Bearer ' + customer_access_token,
+#     'Accept': 'application/json',}
 
 data_menu = json.load(open('./delivery-menu.json'))
 print(data_menu.keys())
@@ -62,6 +98,7 @@ def add_category(cat_name, imagefname):
 
 
 for menu_group in menu_groups:
+    # break
     items = menu_group['items']
     for item in items:
         image_fpath = []
@@ -85,6 +122,7 @@ for menu_group in menu_groups:
             fp.write(response.content)
 
 for menu_group in menu_groups:
+    # break
     print(menu_group['name'])
 
     cat_id = add_category(menu_group['name'], random.choice(images))
@@ -121,3 +159,4 @@ for menu_group in menu_groups:
         sleep(1)
 
 print('-'*30)
+

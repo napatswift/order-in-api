@@ -42,7 +42,14 @@ class TableController extends Controller
     {
         $this->authorize('create', Table::class);
 
-        $table = new TableResource(Table::create($request->all()));
+        $restaurant_id = null;
+        if (Auth::user()->is_manager) {
+            $manager = Manager::findOrFail(Auth::id());
+            $restaurant_id = $manager->restaurant->id;
+        }
+        $table = Table::create(
+            array_merge($request->all(),['restaurant_id' => $restaurant_id]));
+
         if ($table->save()) {
             return response()->json([
                 'success' => true,

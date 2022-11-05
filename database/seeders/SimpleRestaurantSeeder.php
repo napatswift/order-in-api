@@ -56,16 +56,18 @@ class SimpleRestaurantSeeder extends Seeder
         $employee->restaurant()->associate($restaurant);
         $employee->save();
 
-        $user = new Customer();
-        $user->name = fake()->name;
-        $user->username = 'customer.sample';
-        $user->email = fake()->email();
-        $password_test = 'password';
-        $user->password = bcrypt($password_test);
-        $user->is_manager = false;
-        $user->is_employee = false;
-        $user->restaurant()->associate($restaurant);
-        $user->save();
+        for ($i=0; $i < 10; $i++) { 
+            $user = new Customer();
+            $user->name = fake()->name;
+            $user->username = 'customer.sample'.$i;
+            $user->email = fake()->email();
+            $password_test = 'password';
+            $user->password = bcrypt($password_test);
+            $user->is_manager = false;
+            $user->is_employee = false;
+            $user->restaurant()->associate($restaurant);
+            $user->save();
+        }
 
         $employees = Employee::get();
 

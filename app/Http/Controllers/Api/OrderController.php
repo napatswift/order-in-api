@@ -43,7 +43,7 @@ class OrderController extends Controller
             }
             return OrderResource::collection(
                 Order::where('restaurant_id', $user->restaurant->id)
-                    ->with(['orderDescription'])
+                    ->with(['orderDescription', 'table'])
                     ->get()
             );
         }
@@ -53,7 +53,7 @@ class OrderController extends Controller
 
             return OrderResource::collection(
                 Order::where('restaurant_id', $user->restaurant->id)
-                    ->with(['orderDescription'])
+                    ->with(['orderDescription', 'table'])
                     ->get()
             );
         }

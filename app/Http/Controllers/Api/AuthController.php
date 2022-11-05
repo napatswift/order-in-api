@@ -123,10 +123,9 @@ class AuthController extends Controller
         $customer->is_employee = false;
         $customer->table()->associate($table);
 
-        $manager = Manager::find(Auth::id());
-        $restaurant = $manager->restaurant;
+        $employee = Employee::find(Auth::id());
         
-        $customer->restaurant()->associate($restaurant);
+        $customer->restaurant()->associate($employee->restaurant_id);
         $customer->save();
         $table->available = false;
         $table->save();
