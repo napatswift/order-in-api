@@ -8,6 +8,9 @@ use App\Models\Table;
 use App\Http\Resources\TableResource;
 use App\Http\Requests\StoreTableRequest;
 use App\Http\Requests\UpdateTableRequest;
+use App\Models\Employee;
+use App\Models\Manager;
+use Illuminate\Support\Facades\Auth;
 
 class TableController extends Controller
 {
@@ -20,13 +23,18 @@ class TableController extends Controller
     {
         $this->authorize('viewAny', Table::class);
 
-        return Table::all();
+        if (Auth::user()->is_employee) {
+            $user = Employee::find(Auth::id());
+            $reaturant_id = $user->restaurant_id;
+            return TableResource::collection(Table::where('restaurant_id', $reaturant_id)->get());
+        }
+
+        return response()->json(['message'=>'No table found'], 404);
     }
 
     public function show(Table $table)
     {
         $this->authorize('view', $table);
-
         return new TableResource($table);
     }
 

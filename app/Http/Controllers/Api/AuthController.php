@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Manager;
 use App\Models\Employee;
 use App\Models\Customer;
+use App\Models\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -93,8 +94,24 @@ class AuthController extends Controller
         return response()->json(compact('employee', 'token'), 201);
     }
 
-    public function addCustomer()
+    public function addCustomer(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'table_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            Log::info($validator->errors());
+            return response()->json($validator->errors(), 422);
+        }
+
+        $table = Table::findOrFail($request->table_id);
+        if (!$table->available) {
+            return response()->json([
+                ['message' => 'The table you trying to reserve is not available at the moment']
+            ], 422);
+        }
+
         $customer = new Customer();
         $customer->name = 'CUSTOMER'; //TODO: add customer name
         $username = Str::random(16);
@@ -104,12 +121,15 @@ class AuthController extends Controller
         $customer->password = bcrypt($random_password);
         $customer->is_manager = false;
         $customer->is_employee = false;
+        $customer->table()->associate($table);
 
         $manager = Manager::find(Auth::id());
         $restaurant = $manager->restaurant;
         
         $customer->restaurant()->associate($restaurant);
         $customer->save();
+        $table->available = false;
+        $table->save();
         
         $user = User::find($customer->id);
 

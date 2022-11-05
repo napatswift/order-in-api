@@ -39,7 +39,7 @@ class ReviewController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Review saved successfully',
-                'review' => $review
+                'review'  => $review
             ], 201);
         }
         return response()->json([
@@ -57,7 +57,7 @@ class ReviewController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Review updated successfully',
-                'review' => $review
+                'review'  => $review
             ], 200);
         }
         return response()->json([

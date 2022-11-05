@@ -52,7 +52,7 @@ class SimpleRestaurantSeeder extends Seeder
         $password_test = 'password';
         $employee->password = bcrypt($password_test);
         $employee->is_manager = false;
-        $employee->is_employee = false;
+        $employee->is_employee = true;
         $employee->restaurant()->associate($restaurant);
         $employee->save();
 

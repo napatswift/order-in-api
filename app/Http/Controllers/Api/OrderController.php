@@ -131,7 +131,16 @@ class OrderController extends Controller
         $restaurant_id = $customer->restaurant->id;
         $new_order = new Order();
         $new_order->restaurant()->associate($restaurant_id);
-        $new_order->customer()->associate(Auth::id());
+        $new_order->customer()->associate($customer);
+
+        Log::info($customer);
+
+        if (is_null($customer->table)) {
+            return response()->json([], 422);
+        }
+
+        $new_order->table()->associate($customer->table);
+
         if (!$new_order->save()) {
             return response()->json([
                 "success" => true,

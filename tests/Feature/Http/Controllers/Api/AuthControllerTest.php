@@ -4,6 +4,8 @@ namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\Employee;
 use App\Models\Manager;
+use App\Models\Restaurant;
+use App\Models\Table;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -193,6 +195,13 @@ class AuthControllerTest extends TestCase
         $manager->is_employee = false;
         $manager->save();
 
+        $restaurant = new Restaurant();
+        $restaurant->name = 'Restaurant Test';
+        $restaurant->owner_id = $manager->id;
+        $restaurant->save();
+
+        $manager->restaurant()->save($restaurant);
+
         $response = $this->postJson($this->endPoint.'/login', [
             'username' => $manager->username,
             'password' => $password_test,
@@ -200,6 +209,16 @@ class AuthControllerTest extends TestCase
 
         $response->assertStatus(200);
         $accessToken = $response['access_token'];
+
+        for ($i=0; $i < 10; $i++) { 
+            Table::create([
+                'table_number' => 'A'.$i,
+                'available' => true,
+                'restaurant_id' => $restaurant->id,
+            ]);
+        }
+
+        $this->assertDatabaseCount('tables', 10);
 
         $name = fake()->name;
         $username = fake()->userName();
@@ -227,12 +246,15 @@ class AuthControllerTest extends TestCase
 
         $employeeAccessToken = $response['access_token'];
 
+        $this->assertTrue(Table::find(1)->available, 'The table should be available');
+        
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $employeeAccessToken,
-        ])->postJson($this->endPoint.'/register/customer');
+        ])->postJson($this->endPoint.'/register/customer',['table_id' => 1]);
 
         $response->assertStatus(201);
+        $this->assertFalse(Table::find(1)->available, 'The table should be unavailable');
 
         
         $response = $this->postJson($this->endPoint.'/login', [
