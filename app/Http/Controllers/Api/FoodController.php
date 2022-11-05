@@ -86,6 +86,7 @@ class FoodController extends Controller
                 ->useDisk('s3')
                  ->usingFileName(fake()->uuid().'.'.$im_extension)
                  ->toMediaCollection();
+        }
 
         $food->categories()->attach($request->get('category_ids'));
         $food->foodAllergies()->attach($request->get('food_allergy_ids'));

@@ -50,7 +50,7 @@ class AuthController extends Controller
             $manager->addMediaFromRequest('image')
                     ->useDisk('s3')
                     ->usingFileName(fake()->uuid().'.'.$im_extension)
-                    ->toMediaCollection()
+                    ->toMediaCollection();
         }
 
         $manager->name = $request->name;
