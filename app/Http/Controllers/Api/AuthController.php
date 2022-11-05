@@ -49,7 +49,7 @@ class AuthController extends Controller
             ->addMediaFromRequest('image')
             ->usingFileName(fake()->uuid().'.'.$im_extension)
             ->toMediaCollection()
-            ->store('images', 's3');
+            ->useDisk('s3');
         $manager->name = $request->name;
         $manager->email = $request->email;
         $manager->username = $request->username;
@@ -90,7 +90,7 @@ class AuthController extends Controller
             ->addMediaFromRequest('image')
             ->usingFileName(fake()->uuid().'.'.$im_extension)
             ->toMediaCollection()
-            ->store('images', 's3');
+            ->useDisk('s3');
         $employee->name = $request->name;
         $employee->email = $request->email;
         $employee->username = $request->username;
