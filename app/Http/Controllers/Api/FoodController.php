@@ -75,23 +75,19 @@ class FoodController extends Controller
             ], 400);
         }
 
-        if($request->hasFile('image')) {
-            $im_extension = $request->file('image')->extension();
-            $url= $request->addMediaFromRequest('image')
-                          ->storeAs('food', fake()->uuid().'.'.$im_extension, 's3')
-                          ->toMediaCollection();
-        }
-
         $food = Food::create(
-            array_merge(
-                ['food_name' => $request->food_name,
-                'food_price' => $request->food_price,
-                'food_detail' => $request->food_detail,
-                'cooking_time' => $request->cooking_time,
-                'image' => $url],
+            array_merge($request->all(),
                 ['restaurant_id' => $manager->restaurant->id]
             ));
-        
+
+        if($request->hasFile('image')) {
+            $im_extension = $request->file('image')->extension();
+            $food->addMediaFromRequest('image')
+                 ->usingFileName(fake()->uuid().'.'.$im_extension)
+                 ->toMediaCollection()
+                 ->useDisk('s3');
+        }
+
         $food->categories()->attach($request->get('category_ids'));
         $food->foodAllergies()->attach($request->get('food_allergy_ids'));
 

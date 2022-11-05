@@ -41,19 +41,19 @@ class CategoryController extends Controller
 
         $manager = Manager::findOrFail(Auth::id());
 
-        if($request->hasFile('image')) {
-            $im_extension = $request->file('image')->extension();
-            $url= $request->addMediaFromRequest('image')
-                          ->storeAs('food', fake()->uuid().'.'.$im_extension, 's3')
-                          ->toMediaCollection();
-        }
-
         $category = Category::create(
-            array_merge(['name' => $request->name,
-                        'image' => $url],
+            array_merge($request->all(),
                         ['restaurant_id' => $manager->restaurant->id]
             ));
         $category = new CategoryResource($category);
+
+        if($request->hasFile('image')) {
+            $im_extension = $request->file('image')->extension();
+            $category->addMediaFromRequest('image')
+                          ->usingFileName(fake()->uuid().'.'.$im_extension)
+                          ->toMediaCollection()
+                          ->useDisk('s3');
+        }
 
         if ($category->save()) {
             return response()->json([
