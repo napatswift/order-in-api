@@ -44,12 +44,15 @@ class AuthController extends Controller
         }
 
         $manager = new Manager();
-        $im_extension = $request->file('image')->extension();
-        $manager
-            ->addMediaFromRequest('image')
-            ->usingFileName(fake()->uuid().'.'.$im_extension)
-            ->toMediaCollection()
-            ->useDisk('s3');
+
+        if($request->hasFile('image')) {
+            $im_extension = $request->file('image')->extension();
+            $manager
+                ->addMediaFromRequest('image')
+                ->usingFileName(fake()->uuid().'.'.$im_extension)
+                ->toMediaCollection()
+                ->useDisk('s3');
+        }
         $manager->name = $request->name;
         $manager->email = $request->email;
         $manager->username = $request->username;

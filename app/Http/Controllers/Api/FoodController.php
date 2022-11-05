@@ -84,12 +84,14 @@ class FoodController extends Controller
         $food->categories()->attach($request->get('category_ids'));
         $food->foodAllergies()->attach($request->get('food_allergy_ids'));
 
-        $im_extension = $request->file('image')->extension();
-        $food
-            ->addMediaFromRequest('image')
-            ->usingFileName(fake()->uuid().'.'.$im_extension)
-            ->toMediaCollection()
-            ->useDisk('s3');
+        if($request->hasFile('image')) {
+            $im_extension = $request->file('image')->extension();
+            $food
+                ->addMediaFromRequest('image')
+                ->usingFileName(fake()->uuid().'.'.$im_extension)
+                ->toMediaCollection()
+                ->useDisk('s3');
+        }
 
         if ($food->save()) {
             $food;

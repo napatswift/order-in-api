@@ -48,12 +48,15 @@ class CategoryController extends Controller
         );
         $category = new CategoryResource($category);
 
-        $im_extension = $request->file('image')->extension();
-        $category
-            ->addMediaFromRequest('image')
-            ->usingFileName(fake()->uuid().'.'.$im_extension)
-            ->toMediaCollection()
-            ->useDisk('s3');
+        if($request->hasFile('image')) {
+            $im_extension = $request->file('image')->extension();
+            $category
+                ->addMediaFromRequest('image')
+                ->usingFileName(fake()->uuid().'.'.$im_extension)
+                ->toMediaCollection()
+                ->useDisk('s3');
+        }
+        
 
         if ($category->save()) {
             return response()->json([
