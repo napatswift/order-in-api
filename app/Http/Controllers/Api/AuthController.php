@@ -52,7 +52,7 @@ class AuthController extends Controller
         $manager->is_employee = false;
         $manager->save();
 
-        $managerUserModel = User::find($manager->id);
+        $managerUserModel = User::findOrFail($manager->id);
 
         $token = JWTAuth::fromUser($manager);
 
@@ -74,22 +74,25 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $manager = Manager::find(Auth::id());
+        $manager = Manager::findOrFail(Auth::id());
         $restaurant = $manager->restaurant;
 
-        $employee = new Employee();
+        $employee = new User();
         $employee->name = $request->name;
         $employee->email = $request->email;
         $employee->username = $request->username;
         $employee->password = bcrypt($request->password);
-        $employee->restaurant()->associate($restaurant);
         $employee->is_manager = false;
         $employee->is_employee = true;
         $employee->save();
 
-        $user = User::find($employee->id);
+        $employee = Employee::findOrFail($employee->id);
+        $employee->restaurant()->associate($restaurant);
+        $employee->save();
+        
+        $employee = User::findOrFail($employee->id);
 
-        $token = JWTAuth::fromUser($user);
+        $token = JWTAuth::fromUser($employee);
 
         return response()->json(compact('employee', 'token'), 201);
     }
@@ -123,14 +126,19 @@ class AuthController extends Controller
         $customer->is_employee = false;
         $customer->table()->associate($table);
 
-        $employee = Employee::find(Auth::id());
+        Log::info(Auth::id());
+
+        Log::info(Employee::get());
+        Log::info(User::get());
+
+        $employee = Employee::findOrFail(Auth::id());
         
         $customer->restaurant()->associate($employee->restaurant_id);
         $customer->save();
         $table->available = false;
         $table->save();
         
-        $user = User::find($customer->id);
+        $user = User::findOrFail($customer->id);
 
         $token = JWTAuth::fromUser($user);
 
@@ -145,7 +153,7 @@ class AuthController extends Controller
     /**
      * Get a JWT via given credentials.
      *
-     * @return \Illuminate\Http\JsonResponse
+     *AuthController @return \Illuminate\Http\JsonResponse
      */
     public function login(Request $request)
     {
@@ -209,7 +217,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => config('jwt.ttl') * 60,
-        //    'user' => new UserResource(auth()->user())
+            'user' => new UserResource(Auth::user())
         ]);
     }
 }

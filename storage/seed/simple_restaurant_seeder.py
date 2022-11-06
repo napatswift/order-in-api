@@ -7,7 +7,7 @@ import requests
 import numpy as np
 
 
-base_url = 'http://localhost/api'
+base_url = 'https://api-production-6bdc.up.railway.app/api'
 images = ['assets/' + ats for ats in os.listdir('assets') if ats.endswith('.jpg')]
 user_agents = [
   "Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0",
@@ -157,6 +157,3 @@ for menu_group in menu_groups:
         if response.status_code != 201:
             print(response.json())
         sleep(1)
-
-print('-'*30)
-

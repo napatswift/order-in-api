@@ -9,6 +9,7 @@ use App\Models\Table;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
@@ -113,7 +114,6 @@ class AuthControllerTest extends TestCase
 
     public function test_manager_registers_employee()
     {
-
         $manager = new Manager();
         $manager->name = fake()->name;
         $manager->username = fake()->userName();
@@ -186,7 +186,7 @@ class AuthControllerTest extends TestCase
     {
 
         $manager = new Manager();
-        $manager->name = fake()->name;
+        $manager->name = fake()->name();
         $manager->username = fake()->userName();
         $manager->email = fake()->email();
         $password_test = 'password';
@@ -202,14 +202,6 @@ class AuthControllerTest extends TestCase
 
         $manager->restaurant()->save($restaurant);
 
-        $response = $this->postJson($this->endPoint.'/login', [
-            'username' => $manager->username,
-            'password' => $password_test,
-        ]);
-
-        $response->assertStatus(200);
-        $accessToken = $response['access_token'];
-
         for ($i=0; $i < 10; $i++) { 
             Table::create([
                 'table_number' => 'A'.$i,
@@ -219,27 +211,24 @@ class AuthControllerTest extends TestCase
         }
 
         $this->assertDatabaseCount('tables', 10);
-
-        $name = fake()->name;
-        $username = fake()->userName();
-        $email = fake()->email();
-        $password_test = 'password';
-
-        $response = $this->withHeaders([
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $accessToken,
-        ])->postJson($this->endPoint.'/register/employee', [
-            'name' => $name,
-            'username' => $username,
-            'email' => $email,
-            'password' => $password_test,
-        ]);
-
-        $response->assertStatus(201);
+        
+        $employee = new Employee();
+        $employee->name = fake()->name();
+        $employee->username = fake()->userName();
+        $employee->email = fake()->email();
+        $employee_password_test = 'password1';
+        $employee->password = bcrypt($employee_password_test);
+        $employee->is_manager = false;
+        $employee->is_employee = true;
+        $employee->restaurant()->associate($restaurant);
+        $employee->save();
+            
+        $this->assertDatabaseCount('users', 2);
+        $this->assertEquals(Employee::count(), 1);
 
         $response = $this->postJson($this->endPoint.'/login', [
-            'username' => $username,
-            'password' => $password_test,
+            'username' => $employee->username,
+            'password' => $employee_password_test,
         ]);
 
         $response->assertStatus(200);
