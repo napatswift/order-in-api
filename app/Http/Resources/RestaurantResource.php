@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Promotion;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class RestaurantResource extends JsonResource
@@ -17,6 +18,9 @@ class RestaurantResource extends JsonResource
         return [
             'id'   => $this->id,
             'name' => $this->name,
+            'categories' => CategoryResource::collection($this->whenLoaded('categories')),
+            'promotions' => PromotionResource::collection($this->whenLoaded('promotions')),
+            'foods' => FoodResource::collection($this->food->load(['categories'])),
         ];
     }
 }

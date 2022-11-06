@@ -57,6 +57,9 @@ class RestaurantController extends Controller
     public function show(Restaurant $restaurant)
     {
         $this->authorize('view', $restaurant);
+        return new RestaurantResource(
+            $restaurant->load(['categories', 'promotions'])
+        );
     }
 
     /**
