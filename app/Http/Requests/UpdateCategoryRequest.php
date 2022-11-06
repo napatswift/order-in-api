@@ -18,7 +18,7 @@ class UpdateCategoryRequest extends FormRequest
         if ($method == 'PUT') {
             return [
                 'name' => ['required', 'string'],
-                'image' => ['required', 'image']
+                'image' => ['sometimes', 'image']
             ];
         } else {
             return [
