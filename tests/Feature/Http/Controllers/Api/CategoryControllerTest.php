@@ -109,7 +109,7 @@ class CategoryControllerTest extends TestCase
 
     public function test_manager_add_category()
     {
-        $image = UploadedFile::fake()->image('image.jpg')->storeAs('s3', 'image.jpg');
+        $image = UploadedFile::fake()->image('image.jpg');
         $accessToken = $this->get_accesstoken_of_manger_with_restaurant();
 
         $response = $this->withHeaders([
@@ -125,7 +125,7 @@ class CategoryControllerTest extends TestCase
 
     public function test_update_category()
     {
-        $image = UploadedFile::fake()->image('image.jpg')->storeAs('s3', 'image.jpg');;
+        $image = UploadedFile::fake()->image('image.jpg');
         $accessToken = $this->get_accesstoken_of_manger_with_restaurant();
         
         $response = $this->withHeaders([
@@ -144,7 +144,7 @@ class CategoryControllerTest extends TestCase
         $old_name = Category::find($categoy_id)->name;
     
         $new_name = fake()->word();
-        $image = UploadedFile::fake()->image('image.jpg')->storeAs('s3', 'image.jpg');;
+        $image = UploadedFile::fake()->image('image.jpg');
 
         $response = $this->withHeaders([
             'Accept' => 'application/json',
@@ -162,7 +162,7 @@ class CategoryControllerTest extends TestCase
 
     public function test_delete_category()
     {
-        $image = UploadedFile::fake()->image('image.jpg')->storeAs('s3', 'image.jpg');;
+        $image = UploadedFile::fake()->image('image.jpg');
         $accessToken = $this->get_accesstoken_of_manger_with_restaurant();
         
         $response = $this->withHeaders([
@@ -176,7 +176,7 @@ class CategoryControllerTest extends TestCase
         $categoy_id = $response->json('category');
         $response->assertStatus(201);
 
-        $image = UploadedFile::fake()->image('image.jpg')->storeAs('s3', 'image.jpg');;
+        $image = UploadedFile::fake()->image('image.jpg');
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $accessToken,

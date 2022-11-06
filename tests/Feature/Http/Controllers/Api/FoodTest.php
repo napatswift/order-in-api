@@ -159,7 +159,7 @@ class FoodTest extends TestCase
         
         $login_response->assertStatus(200);
 
-        $image = UploadedFile::fake()->image('image.jpg')->storeAs('s3', 'image.jpg');
+        $image = UploadedFile::fake()->image('image.jpg');
         $response = $this->withHeaders([
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $login_response['access_token'],
