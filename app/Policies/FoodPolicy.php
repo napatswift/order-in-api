@@ -56,7 +56,7 @@ class FoodPolicy
      */
     public function update(User $user, Food $food)
     {
-        return $user->is_manager == 1 && $user->restaurant_id == $food->restaurant_id
+        return $user->is_manager == 1 && $user->id == $food->restaurant->manager->id
         ? Response::allow()
         : Response::denyWithStatus(401, 'You are not a manager');
     }
