@@ -66,6 +66,27 @@ class OrderDescriptionController extends Controller
         ], 500);
     }
 
+    public function updateStatus(Request $request, OrderDescription $orderDescription)
+    {
+        $this->authorize('update', $orderDescription);
+
+        if ($orderDescription->order_status+1 < 4)
+            $orderDescription->order_status++;
+
+        if ($orderDescription->save()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'OrderDescription updated successfully',
+                'orderDescription' => $orderDescription
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'OrderDescription updated failed'
+        ], 422);
+    }
+
     public function destroy(OrderDescription $orderDescription)
     {
         $this->authorize('delete', $orderDescription);
