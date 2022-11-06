@@ -11,7 +11,8 @@ class Payment extends Model
 
     protected $fillable = [
         'payment_method',
-        'date_payment'
+        'date_payment',
+        'customer_id',
     ];
 
     /**

@@ -20,7 +20,7 @@ class RestaurantResource extends JsonResource
             'name' => $this->name,
             'categories' => CategoryResource::collection($this->whenLoaded('categories')),
             'promotions' => PromotionResource::collection($this->whenLoaded('promotions')),
-            'foods' => FoodResource::collection($this->food->load(['categories'])),
+            'food' => FoodResource::collection($this->food->load(['categories'])),
         ];
     }
 }

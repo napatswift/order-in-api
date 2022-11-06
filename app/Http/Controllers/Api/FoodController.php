@@ -53,7 +53,7 @@ class FoodController extends Controller
     {
         $this->authorize('view', $food);
 
-        return new FoodResource($food);
+        return new FoodResource($food->load(['foodAllergies', 'promotion', 'categories', 'media']));
     }
 
     public function store(StoreFoodRequest $request)

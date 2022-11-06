@@ -26,7 +26,14 @@ class TableController extends Controller
         if (Auth::user()->is_employee) {
             $user = Employee::find(Auth::id());
             $reaturant_id = $user->restaurant_id;
-            return TableResource::collection(Table::where('restaurant_id', $reaturant_id)->get());
+            return TableResource::collection(
+                Table::with(['customers'])->where('restaurant_id', $reaturant_id)->get());
+        }
+        if (Auth::user()->is_manager) {
+            $user = Manager::find(Auth::id());
+            $reaturant_id = $user->restaurant->id;
+            return TableResource::collection(
+                Table::with(['customers'])->where('restaurant_id', $reaturant_id)->get());
         }
 
         return response()->json(['message'=>'No table found'], 404);
@@ -35,7 +42,7 @@ class TableController extends Controller
     public function show(Table $table)
     {
         $this->authorize('view', $table);
-        return new TableResource($table);
+        return new TableResource($table->load(['customers']));
     }
 
     public function store(StoreTableRequest $request)
@@ -47,6 +54,7 @@ class TableController extends Controller
             $manager = Manager::findOrFail(Auth::id());
             $restaurant_id = $manager->restaurant->id;
         }
+
         $table = Table::create(
             array_merge($request->all(),['restaurant_id' => $restaurant_id]));
 
@@ -60,7 +68,7 @@ class TableController extends Controller
         return response()->json([
             'success' => false,
             'message' => 'Table saved failed',
-        ], 500); 
+        ], 422); 
     }
 
     public function update(UpdateTableRequest $request, Table $table)

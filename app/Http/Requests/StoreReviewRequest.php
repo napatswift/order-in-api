@@ -24,7 +24,10 @@ class StoreReviewRequest extends FormRequest
     public function rules()
     {
         return [
-            'feedback' => 'required',
+            'feedback' => ['required', 'string'],
+            'ratings' => ['required', 'array'],
+            'ratings.*.name' => ['required', 'string'],
+            'ratings.*.count' => ['required', 'integer'],
         ];
     }
 }

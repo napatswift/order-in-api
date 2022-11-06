@@ -46,7 +46,7 @@ class ReviewPolicy
      */
     public function create(User $user)
     {
-        return $uesr->is_manager == 0 && $user->is_employee == 0
+        return $user->is_manager == 0 && $user->is_employee == 0
             ? Response::allow()
             : Response::denyWithStatus(401, 'You are not a customer');
     }
