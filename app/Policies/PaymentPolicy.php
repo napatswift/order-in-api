@@ -42,9 +42,9 @@ class PaymentPolicy
      */
     public function create(User $user)
     {
-        return $user->is_manager == 0 && $user->is_employee == 0
+        return $user->is_manager == 1 || $user->is_employee == 1
             ? Response::allow()
-            : Response::denyWithStatus(401, 'You are not a customer');
+            : Response::denyWithStatus(401, 'You are not a manager or employee');
     }
 
     /**

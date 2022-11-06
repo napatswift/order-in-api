@@ -8,6 +8,9 @@ use App\Http\Requests\StoreReviewRequest;
 use App\Http\Resources\ReviewResource;
 use App\Models\Review;
 use App\Http\Requests\UpdateReviewRequest;
+use App\Models\Customer;
+use App\Models\Rating;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -15,7 +18,7 @@ class ReviewController extends Controller
     {
         $this->middleware('auth:api');
     }
-    
+
     public function index()
     {
         $this->authorize('viewAny', Review::class);
@@ -34,13 +37,35 @@ class ReviewController extends Controller
     {
         $this->authorize('create', Review::class);
 
-        $review = new ReviewResource(Review::create($request->all()));
+        $user_id = Auth::id();
+        $customer = Customer::findOrFail($user_id);
+
+        $review = Review::create(
+            array_merge(
+                $request->all(),
+                [
+                    'restaurant_id' => $customer->restaurant_id
+                ]
+            )
+        );
+
+        $new_rating_list = collect([]);
+
         if ($review->save()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Review saved successfully',
-                'review'  => $review
-            ], 201);
+            foreach ($request->ratings as $rating) {
+                $new_rating = new Rating($rating);
+                $new_rating_list->push($new_rating);
+            }
+
+            if ($review->rating()->saveMany($new_rating_list)) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Review saved successfully',
+                    'review'  => $review
+                ], 201);
+            }
+
+            $review->delete();
         }
         return response()->json([
             'success' => false,
@@ -69,7 +94,7 @@ class ReviewController extends Controller
     public function destroy(Review $review)
     {
         $this->authorize('delete', $review);
-        
+
         if ($review->delete()) {
             return response()->json([
                 'success' => "Review deleted successfully"

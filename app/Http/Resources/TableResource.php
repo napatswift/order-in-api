@@ -14,10 +14,23 @@ class TableResource extends JsonResource
      */
     public function toArray($request)
     {
+        $customer = $this->customers->sortByDesc('created_at')->first();
+        $includeCustomer = false;
+        $customer_data = null;
+        
+        try {
+            $customer_data = $customer->load(['order', 'table'])
+            ->only(['id', 'order', 'table']);
+            $includeCustomer = true;
+        } catch (\Throwable $tb){
+            $includeCustomer = false;
+        }
+
         return [
             'id'           => $this->id,
             'table_number' => $this->table_number,
-            'available'    => $this->available
+            'available'    => $this->available,
+            'current_customer' => $customer_data
         ];
     }
 }

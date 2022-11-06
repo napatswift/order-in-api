@@ -11,6 +11,7 @@ class Review extends Model
 
     protected $fillable = [
         'feedback',
+        'restaurant_id'
     ];
 
     public function rating()

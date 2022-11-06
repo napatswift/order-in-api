@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
 use App\Http\Resources\PaymentResource;
+use App\Models\Customer;
 use App\Models\Payment;
+use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
@@ -33,9 +35,33 @@ class PaymentController extends Controller
     public function store(StorePaymentRequest $request)
     {
         $this->authorize('create', Payment::class);
+        
+        $customer = Customer::
+            where('table_id', $request->table_id)
+            ->where('active', true)
+            ->latest()
+            ->first();
+        
+        if (!$customer) {
+            return response('No customer at the table', 404);
+        }
+        
+        $payment = new PaymentResource(
+            Payment::create(
+                array_merge($request->all(), [
+                    'customer_id' => $customer->id,
+                    'date_payment' => Carbon::now(),
+                ])
+            )
+        );
 
-        $payment = new PaymentResource(Payment::create($request->all()));
         if ($payment->save()) {
+            $customer->active = false;
+            $table = $customer->table;
+            $table->available = true;
+            $table->save();
+            $customer->save();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Payment saved successfully',
