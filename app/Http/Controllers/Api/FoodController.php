@@ -76,19 +76,20 @@ class FoodController extends Controller
         }
 
         $food = Food::create(
-            array_merge(
-                $request->all(),
-                ['restaurant_id' => $manager->restaurant->id])
-        );
-        
+            array_merge($request->all(),
+                ['restaurant_id' => $manager->restaurant->id]
+            ));
+
+        if($request->hasFile('image')) {
+            $im_extension = $request->file('image')->extension();
+            $food->addMediaFromRequest('image','s3')
+                 ->usingFileName(fake()->uuid().'.'.$im_extension)
+                 ->toMediaCollection();
+        }
+
         $food->categories()->attach($request->get('category_ids'));
         $food->foodAllergies()->attach($request->get('food_allergy_ids'));
 
-        $im_extension = $request->file('image')->extension();
-        $food
-            ->addMediaFromRequest('image')
-            ->usingFileName(fake()->uuid().'.'.$im_extension)
-            ->toMediaCollection();
 
         if ($food->save()) {
             $food;
