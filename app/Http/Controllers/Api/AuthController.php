@@ -35,6 +35,7 @@ class AuthController extends Controller
             'username' => 'required|string|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',            
         ]);
 
         if ($validator->fails()) {
@@ -43,6 +44,14 @@ class AuthController extends Controller
         }
 
         $manager = new Manager();
+
+        if($request->hasFile('image')) {
+            $im_extension = $request->file('image')->extension();
+            $manager->addMediaFromRequest('image', 's3')
+                    ->usingFileName(fake()->uuid().'.'.$im_extension)
+                    ->toMediaCollection();
+        }
+
         $manager->name = $request->name;
         $manager->email = $request->email;
         $manager->username = $request->username;
@@ -66,6 +75,7 @@ class AuthController extends Controller
             'username' => 'required|string|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',  
         ]);
 
         if ($validator->fails()) {
@@ -76,7 +86,14 @@ class AuthController extends Controller
         $manager = Manager::find(Auth::id());
         $restaurant = $manager->restaurant;
 
+
         $employee = new Employee();
+        if($request->hasFile('image')) {
+            $im_extension = $request->file('image')->extension();
+            $employee->addMediaFromRequest('image', 's3')
+                     ->usingFileName(fake()->uuid().'.'.$im_extension)
+                     ->toMediaCollection();
+        }   
         $employee->name = $request->name;
         $employee->email = $request->email;
         $employee->username = $request->username;
