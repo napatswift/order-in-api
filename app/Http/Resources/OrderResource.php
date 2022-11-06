@@ -18,6 +18,7 @@ class OrderResource extends JsonResource
         return [
             'id'                => $this->id,
             'order_description' => ODResource::collection($this->whenLoaded('orderDescription')),
+            'table_number'      => $this->table->table_number
         ];
     }
 }

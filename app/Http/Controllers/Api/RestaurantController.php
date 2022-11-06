@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRestaurantRequest;
 use App\Http\Requests\UpdateRestaurantRequest;
+use App\Http\Resources\RestaurantResource;
 use App\Models\Restaurant;
+use Illuminate\Support\Facades\Auth;
 
 class RestaurantController extends Controller
 {
@@ -32,6 +35,17 @@ class RestaurantController extends Controller
     public function store(StoreRestaurantRequest $request)
     {
         $this->authorize('create', Restaurant::class);
+
+        $restaurant = Restaurant::create(array_merge(
+            $request->all(),
+            ['owner_id' => Auth::id()]
+        ));
+
+        if ($restaurant->save()) {
+            return response()->json(new RestaurantResource($restaurant), 201);
+        }
+
+        return response()->json(['message' => 'content not created'], 422);
     }
 
     /**

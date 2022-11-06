@@ -7,6 +7,7 @@ use App\Models\Food;
 use App\Models\FoodAllergy;
 use App\Models\Manager;
 use App\Models\Restaurant;
+use App\Models\Table;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -34,6 +35,16 @@ class CustomerOrderTest extends TestCase
 
         $manager->restaurant()->save($restaurant);
 
+        for ($i=0; $i < 10; $i++) { 
+            $table = Table::create([
+                'table_number' => 'A'.$i,
+                'available' => true,
+                'restaurant_id' => $restaurant->id,
+            ]);
+        }
+
+        $this->assertDatabaseCount('tables', 10);
+
         Food::factory(30)->create();
 
         $user = new Customer();
@@ -45,6 +56,7 @@ class CustomerOrderTest extends TestCase
         $user->is_manager = false;
         $user->is_employee = false;
         $user->restaurant()->associate($restaurant);
+        $user->table()->associate($table);
         $user->save();
 
         $login_response = $this->postJson('/api/auth/login', [

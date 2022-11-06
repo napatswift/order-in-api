@@ -29,6 +29,8 @@ Route::apiResource('orders', App\Http\Controllers\Api\OrderController::class);
 Route::apiResource('orderDescriptions', App\Http\Controllers\Api\OrderDescriptionController::class);
 Route::apiResource('reviews', App\Http\Controllers\Api\ReviewController::class);
 Route::apiResource('categories', App\Http\Controllers\Api\CategoryController::class);
+Route::apiResource('restaurant', App\Http\Controllers\Api\RestaurantController::class);
+
 Route::post('orders/place', [App\Http\Controllers\Api\OrderController::class, 'placeNewOrder']);
 // routes/api.php
 use App\Http\Controllers\Api\AuthController;

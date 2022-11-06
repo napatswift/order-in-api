@@ -2,6 +2,7 @@
 
 use App\Models\Customer;
 use App\Models\Restaurant;
+use App\Models\Table;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignIdFor(Restaurant::class);
             $table->foreignIdFor(Customer::class);
+            $table->foreignIdFor(Table::class);
         });
     }
 

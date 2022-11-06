@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Restaurant;
+use App\Models\Table;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -31,6 +32,10 @@ return new class extends Migration
 
             // for cutomer and employee
             $table->foreignIdFor(Restaurant::class)->nullable();
+            
+            // for customer
+            $table->foreignIdFor(Table::class)->nullable();
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

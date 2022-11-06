@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Manager;
 use App\Models\Employee;
 use App\Models\Customer;
+use App\Models\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -60,7 +61,7 @@ class AuthController extends Controller
         $manager->is_employee = false;
         $manager->save();
 
-        $managerUserModel = User::find($manager->id);
+        $managerUserModel = User::findOrFail($manager->id);
 
         $token = JWTAuth::fromUser($manager);
 
@@ -83,9 +84,8 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $manager = Manager::find(Auth::id());
+        $manager = Manager::findOrFail(Auth::id());
         $restaurant = $manager->restaurant;
-
 
         $employee = new Employee();
         if($request->hasFile('image')) {
@@ -94,24 +94,44 @@ class AuthController extends Controller
                      ->usingFileName(fake()->uuid().'.'.$im_extension)
                      ->toMediaCollection();
         }   
+
         $employee->name = $request->name;
         $employee->email = $request->email;
         $employee->username = $request->username;
         $employee->password = bcrypt($request->password);
-        $employee->restaurant()->associate($restaurant);
         $employee->is_manager = false;
         $employee->is_employee = true;
         $employee->save();
 
-        $user = User::find($employee->id);
+        $employee = Employee::findOrFail($employee->id);
+        $employee->restaurant()->associate($restaurant);
+        $employee->save();
+        
+        $employee = User::findOrFail($employee->id);
 
-        $token = JWTAuth::fromUser($user);
+        $token = JWTAuth::fromUser($employee);
 
         return response()->json(compact('employee', 'token'), 201);
     }
 
-    public function addCustomer()
+    public function addCustomer(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'table_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            Log::info($validator->errors());
+            return response()->json($validator->errors(), 422);
+        }
+
+        $table = Table::findOrFail($request->table_id);
+        if (!$table->available) {
+            return response()->json([
+                ['message' => 'The table you trying to reserve is not available at the moment']
+            ], 422);
+        }
+
         $customer = new Customer();
         $customer->name = 'CUSTOMER'; //TODO: add customer name
         $username = Str::random(16);
@@ -121,14 +141,21 @@ class AuthController extends Controller
         $customer->password = bcrypt($random_password);
         $customer->is_manager = false;
         $customer->is_employee = false;
+        $customer->table()->associate($table);
 
-        $manager = Manager::find(Auth::id());
-        $restaurant = $manager->restaurant;
+        Log::info(Auth::id());
+
+        Log::info(Employee::get());
+        Log::info(User::get());
+
+        $employee = Employee::findOrFail(Auth::id());
         
-        $customer->restaurant()->associate($restaurant);
+        $customer->restaurant()->associate($employee->restaurant_id);
         $customer->save();
+        $table->available = false;
+        $table->save();
         
-        $user = User::find($customer->id);
+        $user = User::findOrFail($customer->id);
 
         $token = JWTAuth::fromUser($user);
 
@@ -143,7 +170,7 @@ class AuthController extends Controller
     /**
      * Get a JWT via given credentials.
      *
-     * @return \Illuminate\Http\JsonResponse
+     *AuthController @return \Illuminate\Http\JsonResponse
      */
     public function login(Request $request)
     {
@@ -207,7 +234,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => config('jwt.ttl') * 60,
-        //    'user' => new UserResource(auth()->user())
+            'user' => new UserResource(Auth::user())
         ]);
     }
 }
