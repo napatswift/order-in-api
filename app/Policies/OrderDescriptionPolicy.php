@@ -68,9 +68,7 @@ class OrderDescriptionPolicy
      */
     public function delete(User $user, OrderDescription $orderDescription)
     {
-        return $user->is_manager == 1
-            ? Response::allow()
-            : Response::denyWithStatus(401, 'You are not a manager');
+        return Response::allow();
     }
 
     /**
