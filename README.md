@@ -26,3 +26,11 @@ https://www.notion.so/napatswift/User-journey-ca4f88400a4a4f3ab1c757d2fa212ec8
 
 ## UI Flow
 https://www.figma.com/file/5Ddb7b5A0Kl5jEITwwdXls/ROrdering?node-id=51504%3A4712
+
+
+## API
+### To Run
+## หลังจาก clone project
+1. [https://laravel.com/docs/9.x/sail#installing-composer-dependencies-for-existing-projects](https://laravel.com/docs/9.x/sail#installing-composer-dependencies-for-existing-projects)
+2. `cp .env.example .env`
+3. `sail up -d`
